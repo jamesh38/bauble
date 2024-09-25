@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+# cli.rb
+require "bauble/cli/bauble_cli"
+
+Bauble::Cli::BaubleCli.start(ARGV)
