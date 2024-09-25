@@ -25,7 +25,7 @@ module Bauble
       def require_entrypoint
         file = File.read('bauble.json')
         config = JSON.parse(file)
-        require config['entrypoint']
+        require "#{Dir.pwd}/#{config['entrypoint']}"
       end
     end
   end
