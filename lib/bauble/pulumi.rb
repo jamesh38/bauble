@@ -23,6 +23,7 @@ module Bauble
 
     def init_stack
       puts 'Initializing pulumi stack...'
+      `pulumi login --local --cwd ./.bauble`
       `pulumi stack init --stack bauble-app --cwd ./.bauble`
     end
 
