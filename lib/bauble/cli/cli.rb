@@ -5,6 +5,7 @@ require 'json'
 require_relative 'commands/preview'
 require_relative 'commands/up'
 require_relative 'commands/destroy'
+require_relative 'pulumi'
 
 module Bauble
   module Cli
@@ -27,11 +28,11 @@ module Bauble
 
       def write_template(template_string)
         create_directory
-        File.open('.bauble/Pulumi.yaml', 'w') { |file| file.write(template_string) }
+        File.open("#{Pulumi::PULUMI_HOME}/Pulumi.yaml", 'w') { |file| file.write(template_string) }
       end
 
       def create_directory
-        Dir.mkdir('.bauble') unless File.directory?('.bauble')
+        FileUtils.mkdir_p(Pulumi::PULUMI_HOME)
       end
 
       def require_entrypoint
