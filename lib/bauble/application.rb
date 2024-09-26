@@ -2,7 +2,6 @@
 
 require_relative 'resources/s3_bucket'
 require_relative 'resources/iam_role'
-require_relative 'pulumi'
 require 'yaml'
 
 module Bauble
@@ -20,14 +19,18 @@ module Bauble
       @resources << resource
     end
 
-    def synthesize_template
-      all_resources = @resources.map(&:synth).reduce({}, :merge)
-      template = base_template
-      template['resources'] = all_resources
-      write_template(template.to_yaml)
+    def template
+      @template ||= synthesize_template
     end
 
     private
+
+    def synthesize_template
+      all_resources = @resources.map(&:synthesize).reduce({}, :merge)
+      template = base_template
+      template['resources'] = all_resources
+      template.to_yaml
+    end
 
     def base_template
       {
@@ -35,15 +38,6 @@ module Bauble
         'runtime' => 'yaml',
         'resources' => {}
       }
-    end
-
-    def write_template(template_string)
-      create_directory
-      File.open('.bauble/Pulumi.yaml', 'w') { |file| file.write(template_string) }
-    end
-
-    def create_directory
-      Dir.mkdir('.bauble') unless File.directory?('.bauble')
     end
   end
 end

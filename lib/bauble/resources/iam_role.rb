@@ -15,7 +15,7 @@ module Bauble
         @policies = policies
       end
 
-      def synth
+      def synthesize
         {
           @role_name => {
             'type' => 'aws:iam:Role',
