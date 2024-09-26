@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
+require 'colorize'
+
 module Bauble
   module Cli
     # cli logger
     module Logger
       class << self
         def log(message)
-          puts "[ Bauble ] #{message}"
+          print "[ Bauble ] #{message}".green
         end
 
         def pulumi(message)
-          puts "[ Pulumi ] #{message}"
+          print "[ Pulumi ] #{message}".blue
         end
 
         def nl
