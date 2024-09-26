@@ -9,8 +9,8 @@ module Bauble
     class S3Bucket < BaseResource
       attr_accessor :bucket_name, :versioning
 
-      def initialize(stack, bucket_name: 'bauble-bucket')
-        super(stack)
+      def initialize(app, bucket_name: 'bauble-bucket')
+        super(app)
         @bucket_name = bucket_name
       end
 
@@ -23,6 +23,10 @@ module Bauble
             }
           }
         }
+      end
+
+      def bundle
+        true
       end
     end
   end

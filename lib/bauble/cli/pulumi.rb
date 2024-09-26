@@ -25,20 +25,17 @@ module Bauble
       end
 
       def preview
-        Logger.logo
-        Logger.log "Running pulumi preview...\n"
+        Logger.debug "Running pulumi preview...\n"
         output_command('preview')
       end
 
-      def up
-        Logger.logo
-        Logger.log "Running pulumi up...\n"
-        output_command('up --yes')
+      def up(target = nil)
+        Logger.debug "Running pulumi up...\n"
+        output_command("up --yes#{target ? " --target #{target}" : ''}")
       end
 
       def destroy
-        Logger.logo
-        Logger.log "Running pulumi destroy...\n"
+        Logger.debug "Running pulumi destroy...\n"
         output_command('destroy --yes')
       end
 
