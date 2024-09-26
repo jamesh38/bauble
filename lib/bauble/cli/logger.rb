@@ -20,7 +20,7 @@ module Bauble
         end
 
         def debug(message)
-          puts "[ Bauble Debug ] #{message}" if ENV['BAUBLE_DEBUG']
+          puts "[ Bauble DEBUG ] #{message}".red if ENV['BAUBLE_DEBUG']
         end
 
         def logo

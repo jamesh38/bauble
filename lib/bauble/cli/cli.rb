@@ -38,9 +38,9 @@ module Bauble
         end
       end
 
-      def write_template(template_string)
+      def write_stack_template(stack)
         create_directory
-        File.open("#{config.pulumi_home}/Pulumi.yaml", 'w') { |file| file.write(template_string) }
+        File.open("#{config.pulumi_home}/Pulumi.#{stack.name}.yaml", 'w') { |file| file.write(stack.template) }
       end
 
       def create_directory

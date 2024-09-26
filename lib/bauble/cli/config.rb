@@ -26,6 +26,7 @@ module Bauble
       def set_pulumi_env_vars
         ENV['PULUMI_HOME'] = @pulumi_home
         ENV['PULUMI_CONFIG_PASSPHRASE'] = ''
+        ENV['PULUMI_SKIP_UPDATE_CHECK'] = 'true'
       end
     end
   end

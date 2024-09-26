@@ -9,8 +9,8 @@ module Bauble
     class IamRole < BaseResource
       attr_accessor :role_name, :policies
 
-      def initialize(app, role_name:, policies: [])
-        super(app)
+      def initialize(stack, role_name:, policies: [])
+        super(stack)
         @role_name = role_name
         @policies = policies
       end
