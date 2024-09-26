@@ -3,17 +3,20 @@
 require_relative 'logger'
 require 'English'
 
-ENV['PULUMI_HOME'] = "#{Dir.pwd}/.bauble"
+STACK_NAME = 'bauble-app'
+BAUBLE_PULUMI_HOME = "#{Dir.pwd}/.bauble/.pulumi".freeze
+
+ENV['PULUMI_HOME'] = BAUBLE_PULUMI_HOME
 ENV['PULUMI_CONFIG_PASSPHRASE'] = ''
 ENV['PULUMI_NON_INTERACTIVE'] = 'true'
-
-STACK_NAME = 'bauble-app'
 
 # pulumi wrapper
 module Bauble
   module Cli
     # Pulumi class
     module Pulumi
+      PULUMI_HOME = BAUBLE_PULUMI_HOME
+
       class << self
         def preview
           init_pulumi unless pulumi_initialized?
@@ -54,7 +57,7 @@ module Bauble
         def global_flags
           [
             '--non-interactive',
-            '--cwd .bauble'
+            "--cwd #{PULUMI_HOME}"
           ]
         end
 
