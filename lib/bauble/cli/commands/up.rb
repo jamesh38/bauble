@@ -7,17 +7,17 @@ require_relative '../logger'
 module Bauble
   module Cli
     module Commands
-      # Preview command
-      module Preview
+      # Up command
+      module Up
         class << self
           def included(thor)
             thor.class_eval do
-              desc 'preview', 'Preview the application'
+              desc 'up', 'Deploy the application'
 
-              def preview
+              def up
                 write_template(@app.template)
-                Bauble::Cli::Pulumi.preview
-                Logger.log('Preview complete')
+                Bauble::Cli::Pulumi.up
+                Logger.log('Up complete')
               end
             end
           end
