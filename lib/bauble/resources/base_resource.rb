@@ -5,6 +5,10 @@ module Bauble
       def initialize(app)
         app.add_resource(self)
       end
+
+      def synthesize
+        raise 'Not implemented'
+      end
     end
   end
 end

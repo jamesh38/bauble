@@ -14,7 +14,7 @@ module Bauble
         @bucket_name = bucket_name
       end
 
-      def synth
+      def synthesize
         {
           @bucket_name => {
             'type' => 'aws:s3:Bucket',
