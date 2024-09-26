@@ -16,8 +16,8 @@ module Bauble
 
               def destroy
                 write_template(@app.template)
-                Bauble::Cli::Pulumi.destroy
-                Logger.log('Destroy complete')
+                pulumi.destroy
+                Logger.log 'Destroy complete\n'
               end
             end
           end

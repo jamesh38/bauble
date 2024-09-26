@@ -16,8 +16,8 @@ module Bauble
 
               def preview
                 write_template(@app.template)
-                Bauble::Cli::Pulumi.preview
-                Logger.log('Preview complete')
+                pulumi.preview
+                Logger.log "Preview complete\n"
               end
             end
           end
