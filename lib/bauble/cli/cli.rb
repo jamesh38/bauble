@@ -7,6 +7,7 @@ require_relative 'commands/preview'
 require_relative 'commands/up'
 require_relative 'commands/destroy'
 require_relative 'pulumi'
+require_relative '../application'
 
 module Bauble
   module Cli
@@ -20,10 +21,14 @@ module Bauble
 
       def initialize(*args)
         super
-        build_config
         require_entrypoint
         @app = ObjectSpace.each_object(Bauble::Application).first
+        build_config
         raise 'No App instance found' unless @app
+      end
+
+      def self.exit_on_failure?
+        true
       end
 
       private
@@ -34,7 +39,7 @@ module Bauble
 
       def build_config
         @config = Config.configure do |c|
-          c.app_name = bauble_json['name']
+          c.app_name = @app.name
         end
       end
 

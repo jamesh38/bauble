@@ -2,16 +2,23 @@
 
 require_relative 'resources/s3_bucket'
 require_relative 'resources/iam_role'
+require_relative 'stack'
+require_relative 'cli/logger'
 require 'yaml'
 
 module Bauble
   # A Bauble application
   class Application
-    attr_accessor :resources, :stacks, :current_stack
+    attr_accessor :resources, :stacks, :current_stack, :name
 
-    def initialize
+    def initialize(name:, stacks: [])
       @resources = []
       @stacks = []
+      @name = name
+      stacks = ['dev'] if stacks.empty?
+      stacks.each do |stack|
+        Stack.new(self, stack)
+      end
     end
 
     def add_resource(resource)
