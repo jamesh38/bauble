@@ -15,7 +15,10 @@ module Bauble
               desc 'preview', 'Preview the application'
 
               def preview
-                write_template(@app.template)
+                @app.change_current_stack('dev')
+                pulumi.create_pulumi_yml(@app.template)
+                pulumi.init!
+                pulumi.create_or_select_stack('dev')
                 pulumi.preview
                 Logger.log "Preview complete\n"
               end

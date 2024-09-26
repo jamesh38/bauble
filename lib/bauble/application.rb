@@ -7,20 +7,27 @@ require 'yaml'
 module Bauble
   # A Bauble application
   class Application
-    attr_accessor :resources
+    attr_accessor :resources, :stacks, :current_stack
 
     def initialize
       @resources = []
-      @resources << Bauble::Resources::IamRole.new(self, role_name: 'lambda-role')
-      @resources << Bauble::Resources::S3Bucket.new(self)
+      @stacks = []
     end
 
     def add_resource(resource)
       @resources << resource
     end
 
+    def add_stack(stack)
+      @stacks << stack
+    end
+
     def template
       @template ||= synthesize_template
+    end
+
+    def change_current_stack(stack_name)
+      @current_stack = @stacks.find { |stack| stack.name == stack_name }
     end
 
     private
@@ -34,7 +41,7 @@ module Bauble
 
     def base_template
       {
-        'name' => 'bauble',
+        'name' => @current_stack.name,
         'runtime' => 'yaml',
         'resources' => {}
       }

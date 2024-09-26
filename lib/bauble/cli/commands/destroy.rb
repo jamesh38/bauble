@@ -15,9 +15,12 @@ module Bauble
               desc 'destroy', 'Destroy the application'
 
               def destroy
-                write_template(@app.template)
+                @app.change_current_stack('dev')
+                pulumi.create_pulumi_yml(@app.template)
+                pulumi.init!
+                pulumi.create_or_select_stack('dev')
                 pulumi.destroy
-                Logger.log 'Destroy complete\n'
+                Logger.log "Destroy complete\n"
               end
             end
           end

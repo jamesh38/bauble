@@ -15,7 +15,10 @@ module Bauble
               desc 'up', 'Deploy the application'
 
               def up
-                write_template(@app.template)
+                @app.change_current_stack('dev')
+                pulumi.create_pulumi_yml(@app.template)
+                pulumi.init!
+                pulumi.create_or_select_stack('dev')
                 pulumi.up
                 Logger.log "Up complete\n"
               end

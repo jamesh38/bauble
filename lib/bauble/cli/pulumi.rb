@@ -14,28 +14,51 @@ module Bauble
         @config = config
       end
 
-      def preview
+      def create_pulumi_yml(template)
+        Logger.debug 'Creating Pulumi.yaml...'
+        FileUtils.mkdir_p(@config.pulumi_home) unless Dir.exist?(@config.pulumi_home)
+        File.write("#{@config.pulumi_home}/Pulumi.yaml", template, mode: 'w')
+      end
+
+      def init!
         init_pulumi unless pulumi_initialized?
+      end
+
+      def preview
         Logger.logo
         Logger.log "Running pulumi preview...\n"
         output_command('preview')
       end
 
       def up
-        init_pulumi unless pulumi_initialized?
         Logger.logo
         Logger.log "Running pulumi up...\n"
         output_command('up --yes')
       end
 
       def destroy
-        init_pulumi unless pulumi_initialized?
         Logger.logo
         Logger.log "Running pulumi destroy...\n"
         output_command('destroy --yes')
       end
 
+      def create_or_select_stack(stack_name)
+        if stack_initialized?(stack_name)
+          Logger.debug "Selecting stack #{stack_name}"
+          select_stack(stack_name)
+        else
+          Logger.debug "Initializing stack #{stack_name}"
+          init_stack(stack_name)
+        end
+      end
+
       private
+
+      def pulumi_initialized?
+        return false unless pulumi_yml_exists?
+
+        pulumi_logged_in?
+      end
 
       def output_command(command)
         Logger.nl
@@ -68,43 +91,35 @@ module Bauble
 
       def init_pulumi
         login
-        init_stack
       end
 
-      def init_stack
-        if stack_initialized?
-          select_stack unless stack_selected?
-        else
-          run_command("stack init --stack #{@config.app_stack_name}")
-        end
+      def pulumi_yml_exists?
+        Logger.debug "Checking for Pulumi.yaml... #{File.exist?("#{@config.pulumi_home}/Pulumi.yaml")}"
+        File.exist?("#{@config.pulumi_home}/Pulumi.yaml")
       end
 
       def login
-        return if pulumi_logged_in?
-
-        Logger.log 'Logging into pulumi locally...'
+        Logger.debug 'Logging into pulumi locally...'
         run_command('login --local')
       end
 
       def pulumi_logged_in?
         run_command('whoami')
+        Logger.debug "Checking pulumi login status... #{$CHILD_STATUS.success?}"
         $CHILD_STATUS.success?
       end
 
-      def stack_initialized?
-        run_command('stack ls').include?(@config.app_stack_name)
+      def init_stack(stack_name)
+        run_command("stack init --stack #{stack_name}")
       end
 
-      def stack_selected?
-        run_command('stack ls').lines.any? { |line| line.include?('*') }
+      def select_stack(stack_name)
+        run_command("stack select --stack #{stack_name}")
       end
 
-      def select_stack
-        run_command("stack select --stack #{@config.app_stack_name}")
-      end
-
-      def pulumi_initialized?
-        pulumi_logged_in? && stack_initialized?
+      def stack_initialized?(stack_name)
+        Logger.debug "Checking if stack #{stack_name} is initialized..."
+        run_command('stack ls').include?(stack_name)
       end
     end
   end
