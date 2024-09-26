@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require 'thor'
-require_relative 'commands/preview'
 require 'json'
+require_relative 'commands/preview'
+require_relative 'commands/up'
+require_relative 'commands/destroy'
 
-# CLI tool
 module Bauble
   module Cli
     # Bauble CLI
@@ -12,6 +13,8 @@ module Bauble
       attr_accessor :app
 
       include Commands::Preview
+      include Commands::Up
+      include Commands::Destroy
 
       def initialize(*args)
         super
@@ -21,6 +24,15 @@ module Bauble
       end
 
       private
+
+      def write_template(template_string)
+        create_directory
+        File.open('.bauble/Pulumi.yaml', 'w') { |file| file.write(template_string) }
+      end
+
+      def create_directory
+        Dir.mkdir('.bauble') unless File.directory?('.bauble')
+      end
 
       def require_entrypoint
         file = File.read('bauble.json')

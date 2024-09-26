@@ -7,17 +7,17 @@ require_relative '../logger'
 module Bauble
   module Cli
     module Commands
-      # Preview command
-      module Preview
+      # Up command
+      module Destroy
         class << self
           def included(thor)
             thor.class_eval do
-              desc 'preview', 'Preview the application'
+              desc 'destroy', 'Destroy the application'
 
-              def preview
+              def destroy
                 write_template(@app.template)
-                Bauble::Cli::Pulumi.preview
-                Logger.log('Preview complete')
+                Bauble::Cli::Pulumi.destroy
+                Logger.log('Destroy complete')
               end
             end
           end

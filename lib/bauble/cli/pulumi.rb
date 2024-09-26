@@ -7,6 +7,8 @@ ENV['PULUMI_HOME'] = "#{Dir.pwd}/.bauble"
 ENV['PULUMI_CONFIG_PASSPHRASE'] = ''
 ENV['PULUMI_NON_INTERACTIVE'] = 'true'
 
+STACK_NAME = 'bauble-app'
+
 # pulumi wrapper
 module Bauble
   module Cli
@@ -17,6 +19,18 @@ module Bauble
           init_pulumi unless pulumi_initialized?
           Logger.log "Running pulumi preview...\n"
           output_command('preview')
+        end
+
+        def up
+          init_pulumi unless pulumi_initialized?
+          Logger.log "Running pulumi up...\n"
+          output_command('up --yes')
+        end
+
+        def destroy
+          init_pulumi unless pulumi_initialized?
+          Logger.log "Running pulumi destroy...\n"
+          output_command('destroy --yes')
         end
 
         private
@@ -53,7 +67,7 @@ module Bauble
           if stack_initialized?
             select_stack unless stack_selected?
           else
-            run_command('stack init --stack bauble-app')
+            run_command("stack init --stack #{STACK_NAME}}")
           end
         end
 
@@ -70,7 +84,7 @@ module Bauble
         end
 
         def stack_initialized?
-          run_command('stack ls').include?('bauble-app')
+          run_command('stack ls').include?(STACK_NAME)
         end
 
         def stack_selected?
@@ -78,7 +92,7 @@ module Bauble
         end
 
         def select_stack
-          run_command('stack select --stack bauble-app')
+          run_command("stack select --stack #{STACK_NAME}")
         end
 
         def pulumi_initialized?
