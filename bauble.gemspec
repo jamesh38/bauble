@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   spec.add_dependency 'colorize'
+  spec.add_dependency 'rubyzip'
   spec.add_dependency 'thor'
 
   # For more information and examples about making a new gem, check out our

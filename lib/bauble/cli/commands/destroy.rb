@@ -16,6 +16,8 @@ module Bauble
               method_option :stack, type: :string, desc: 'The stack to destroy', aliases: '-s'
 
               def destroy
+                Logger.logo
+
                 raise 'No stacks found' if @app.stacks.empty?
                 raise 'Must provide a stack when multiple are defined' if @app.stacks.length > 1 && options[:stack].nil?
 

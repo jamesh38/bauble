@@ -5,16 +5,26 @@ require_relative 'resources/iam_role'
 require_relative 'stack'
 require_relative 'cli/logger'
 require 'yaml'
+require 'digest'
 
 module Bauble
   # A Bauble application
   class Application
-    attr_accessor :resources, :stacks, :current_stack, :name
+    attr_accessor(
+      :resources,
+      :stacks,
+      :current_stack,
+      :name,
+      :config,
+      :code_dir,
+      :bundle_hash
+    )
 
     def initialize(name:, stacks: [])
       @resources = []
       @stacks = []
       @name = name
+      @code_dir = "#{Dir.pwd}/app"
       stacks = ['dev'] if stacks.empty?
       stacks.each do |stack|
         Stack.new(self, stack)
@@ -37,6 +47,11 @@ module Bauble
       @current_stack = @stacks.find { |stack| stack.name == stack_name }
     end
 
+    def bundle
+      @bundle_hash = generate_unique_string("#{Dir.pwd}/app")
+      @resources.each(&:bundle)
+    end
+
     private
 
     def synthesize_template
@@ -48,10 +63,16 @@ module Bauble
 
     def base_template
       {
-        'name' => @current_stack.name,
+        'name' => @name,
         'runtime' => 'yaml',
         'resources' => {}
       }
+    end
+
+    def generate_unique_string(directory)
+      files = Dir.glob("#{directory}/**/*").select { |file| File.file?(file) }
+      content_hash = files.map { |file| Digest::SHA256.file(file).hexdigest }.join
+      Digest::SHA256.hexdigest(content_hash)
     end
   end
 end

@@ -26,6 +26,10 @@ module Bauble
         }
       end
 
+      def bundle
+        true
+      end
+
       def assume_role_policy
         <<-POLICY
       {
