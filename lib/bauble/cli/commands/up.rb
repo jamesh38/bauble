@@ -16,8 +16,8 @@ module Bauble
 
               def up
                 write_template(@app.template)
-                Bauble::Cli::Pulumi.up
-                Logger.log('Up complete')
+                pulumi.up
+                Logger.log "Up complete\n"
               end
             end
           end
