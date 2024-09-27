@@ -18,6 +18,13 @@ module Bauble
               def destroy
                 Logger.logo
 
+                unless yes?('Are you sure you want to destroy the application? [y/N]')
+                  Logger.log('Destroy aborted')
+                  exit(0)
+                end
+
+                Logger.log('Destroying application...')
+
                 # check for any stacks
                 raise 'No stacks found' if @app.stacks.empty?
 
