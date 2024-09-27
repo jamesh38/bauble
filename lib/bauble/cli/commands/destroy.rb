@@ -18,14 +18,26 @@ module Bauble
               def destroy
                 Logger.logo
 
+                # check for any stacks
                 raise 'No stacks found' if @app.stacks.empty?
-                raise 'Must provide a stack when multiple are defined' if @app.stacks.length > 1 && options[:stack].nil?
 
+                # check for multiple stacks
+                if @app.stacks.length > 1 && options[:stack].nil?
+                  Log.error 'Must provide a stack when multiple are defined'
+                  exit(1)
+                end
+
+                # set up stack
                 stack_name = options[:stack] || @app.stacks.first.name
                 @app.change_current_stack(stack_name)
-                pulumi.create_pulumi_yml(@app.template)
+
+                # initialize pulumi
                 pulumi.init!
+
+                # create or select stack
                 pulumi.create_or_select_stack(stack_name)
+
+                # destroy the stack
                 pulumi.destroy
                 Logger.log "Destroy complete\n"
               end

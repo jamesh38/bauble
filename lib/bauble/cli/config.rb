@@ -10,7 +10,6 @@ module Bauble
         :pulumi_home,
         :app_stack_name,
         :debug,
-        :bootstrap_bucket_name,
         :asset_dir
       )
 
