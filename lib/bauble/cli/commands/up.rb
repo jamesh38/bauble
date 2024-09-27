@@ -18,14 +18,21 @@ module Bauble
               def up
                 Logger.logo
 
+                # check for any stacks
                 raise 'No stacks found' if @app.stacks.empty?
-                raise 'Must provide a stack when multiple are defined' if @app.stacks.length > 1 && options[:stack].nil?
+
+                # check for multiple stacks
+                if @app.stacks.length > 1 && options[:stack].nil?
+                  Log.error 'Must provide a stack when multiple are defined'
+                  exit(1)
+                end
 
                 # set up stack
                 stack_name = options[:stack] || @app.stacks.first.name
                 @app.change_current_stack(stack_name)
 
                 # bundle assets
+                Logger.log "Bundling assets...\n"
                 @app.bundle
 
                 # write template file
@@ -36,12 +43,6 @@ module Bauble
 
                 # create or select stack
                 pulumi.create_or_select_stack(stack_name)
-
-                # deploy the bootstrapped resources
-                Logger.log "Deploying bootstrap resources...\n"
-                pulumi.up(
-                  "urn:pulumi:#{stack_name}::#{@app.name}::aws:s3/bucket:Bucket::#{@config.bootstrap_bucket_name}"
-                )
 
                 # deploy the rest
                 Logger.log "Deploying application resources...\n"

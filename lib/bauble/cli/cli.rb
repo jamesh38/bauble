@@ -24,7 +24,6 @@ module Bauble
         require_entrypoint
         @app = ObjectSpace.each_object(Bauble::Application).first
         build_config
-        create_bootstrap_resources
         raise 'No App instance found' unless @app
       end
 
@@ -34,10 +33,6 @@ module Bauble
 
       private
 
-      def create_bootstrap_resources
-        Bauble::Resources::S3Bucket.new(@app, bucket_name: config.bootstrap_bucket_name)
-      end
-
       def pulumi
         @pulumi ||= Bauble::Cli::Pulumi.new(config: config)
       end
@@ -45,7 +40,6 @@ module Bauble
       def build_config
         @config = Config.configure do |c|
           c.app_name = @app.name
-          c.bootstrap_bucket_name = "bauble-bootstrap-#{c.app_name}"
         end
         @app.config = @config
       end

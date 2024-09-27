@@ -18,15 +18,33 @@ module Bauble
               def preview
                 Logger.logo
 
+                # check for any stacks
                 raise 'No stacks found' if @app.stacks.empty?
-                raise 'Must provide a stack when multiple are defined' if @app.stacks.length > 1 && options[:stack].nil?
 
+                # check for multiple stacks
+                if @app.stacks.length > 1 && options[:stack].nil?
+                  Log.error 'Must provide a stack when multiple are defined'
+                  exit(1)
+                end
+
+                # set up stack
                 stack_name = options[:stack] || @app.stacks.first.name
                 @app.change_current_stack(stack_name)
+
+                # bundle assets
+                Logger.log "Bundling assets...\n"
                 @app.bundle
+
+                # write template file
                 pulumi.create_pulumi_yml(@app.template)
+
+                # initialize pulumi
                 pulumi.init!
+
+                # create or select stack
                 pulumi.create_or_select_stack(stack_name)
+
+                # run preview
                 pulumi.preview
                 Logger.log "Preview complete\n"
               end
