@@ -48,6 +48,7 @@ module Bauble
     end
 
     def bundle
+      # TODO: this potentially need to be a hash of more resources I'm not sure yet'
       @bundle_hash = generate_unique_string("#{Dir.pwd}/app")
       @resources.each(&:bundle)
     end

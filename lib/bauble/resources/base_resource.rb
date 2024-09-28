@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 module Bauble
   module Resources
     # Base resource
+    # TODO: this should just be Resource not base resource
     class BaseResource
       attr_accessor :app
 

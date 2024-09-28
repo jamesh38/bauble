@@ -10,6 +10,7 @@ module Bauble
     class RubyFunction < BaseResource
       attr_accessor :handler, :name, :role, :code_dir, :function_url
 
+      # TODO: eval how is nest to pass arguments into this function. maybe args**?
       def initialize(app, name:, handler:, code_dir:, role: nil, function_url: false)
         super(app)
         @name = name
