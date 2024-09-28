@@ -23,8 +23,9 @@ module Bauble
         super
         require_entrypoint
         @app = ObjectSpace.each_object(Bauble::Application).first
-        build_config
         raise 'No App instance found' unless @app
+
+        build_config
       end
 
       def self.exit_on_failure?
@@ -46,6 +47,7 @@ module Bauble
 
       def write_stack_template(stack)
         create_directory
+        # TODO: this can probably be put into something smarter, maube a file writing class?
         File.open("#{config.pulumi_home}/Pulumi.#{stack.name}.yaml", 'w') { |file| file.write(stack.template) }
       end
 
@@ -58,6 +60,7 @@ module Bauble
       end
 
       def require_entrypoint
+        # TODO: We should probably use a config value here instead of Dir.pwd
         require "#{Dir.pwd}/#{bauble_json['entrypoint']}"
       end
     end

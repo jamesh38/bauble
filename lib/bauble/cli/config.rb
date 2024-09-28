@@ -10,11 +10,13 @@ module Bauble
         :pulumi_home,
         :app_stack_name,
         :debug,
-        :asset_dir
+        :asset_dir,
+        :root_dir
       )
 
       def initialize
-        @bauble_home = "#{Dir.pwd}/.bauble"
+        @root_dir = Dir.pwd
+        @bauble_home = "#{@root_dir}/.bauble"
         @asset_dir = "#{@bauble_home}/assets"
         @pulumi_home = "#{@bauble_home}/.pulumi"
         @app_stack_name = 'bauble'
