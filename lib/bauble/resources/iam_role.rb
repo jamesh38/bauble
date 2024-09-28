@@ -6,6 +6,7 @@ require_relative 'base_resource'
 module Bauble
   module Resources
     # aws lambda role
+    # TODO: this should probably be lambda role no IAM role. do we need an IAM Role resource?
     class IamRole < BaseResource
       attr_accessor :role_name, :policies
 
