@@ -22,7 +22,7 @@ module Bauble
               'code' => {
                 'fn::fileArchive' => "#{@app.config.asset_dir}/#{@app.bundle_hash}/gem-layer"
               },
-              'layerName' => 'gem_layer',
+              'layerName' => "#{@app.config.app_name}-gem-layer",
               'compatibleRuntimes' => %w[ruby3.2]
             }
           }
