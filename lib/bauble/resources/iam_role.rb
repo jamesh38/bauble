@@ -17,35 +17,65 @@ module Bauble
       end
 
       def synthesize
-        {
-          @role_name => {
+        role_hash = {
+          role_name => {
             'type' => 'aws:iam:Role',
             'properties' => {
               'assumeRolePolicy' => assume_role_policy
             }
           }
         }
+
+        return role_hash.merge(role_policy) if @policies.any?
+
+        role_hash
       end
 
       def bundle
         true
       end
 
-      def assume_role_policy
-        <<-POLICY
-      {
-        "Version": "2012-10-17",
-        "Statement": [
-          {
-            "Action": "sts:AssumeRole",
-            "Principal": {
-            "Service": "lambda.amazonaws.com"
-            },
-            "Effect": "Allow"
+      private
+
+      def role_policy
+        {
+          "#{role_name}-policy" => {
+            'type' => 'aws:iam:RolePolicy',
+            'properties' => {
+              'name' => "#{role_name}-policy",
+              'role' => "${#{role_name}}",
+              'policy' => synth_policies
+            }
           }
-        ]
-      }
-        POLICY
+        }
+      end
+
+      def synth_policies
+        {
+          Version: '2012-10-17',
+          Statement: @policies.map do |policy|
+            {
+              Effect: policy[:effect].downcase == 'allow' ? 'Allow' : 'Deny',
+              Action: policy[:actions],
+              Resource: policy[:resources]
+            }
+          end
+        }.to_json
+      end
+
+      def assume_role_policy
+        {
+          'Version' => '2012-10-17',
+          'Statement' => [
+            {
+              'Action' => 'sts:AssumeRole',
+              'Principal' => {
+                'Service' => 'lambda.amazonaws.com'
+              },
+              'Effect' => 'Allow'
+            }
+          ]
+        }.to_json
       end
     end
   end
