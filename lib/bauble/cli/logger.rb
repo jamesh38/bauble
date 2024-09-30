@@ -15,6 +15,10 @@ module Bauble
           print "[ Pulumi ] #{message}".blue
         end
 
+        def docker(message)
+          print "[ Docker ] #{message}".magenta
+        end
+
         def nl
           puts "\n"
         end

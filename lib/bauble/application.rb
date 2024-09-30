@@ -22,6 +22,7 @@ module Bauble
 
     def initialize(name:, stacks: [])
       @resources = []
+      add_gem_layer
       @stacks = []
       @name = name
       @code_dir = "#{Dir.pwd}/app"
@@ -41,6 +42,10 @@ module Bauble
 
     def template
       @template ||= synthesize_template
+    end
+
+    def add_gem_layer
+      @resources << Bauble::Resources::GemLayer.new(self)
     end
 
     def change_current_stack(stack_name)
