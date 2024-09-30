@@ -18,19 +18,20 @@ module Bauble
 
         private
 
+        # TODO: Remove the need for this to install things from the sub dir
         def docker_command(bundle_hash)
           'docker run --rm ' \
           '-v $(pwd)/../:/var/task ' \
-          '-w /var/task ' \
+          '-w /var/task/demo_app ' \
           '--entrypoint /bin/sh ' \
           '--platform linux/amd64 ' \
-          'ruby:3.2 ' \
+          'public.ecr.aws/sam/build-ruby3.2 ' \
           "-c \"#{bundle_command(bundle_hash)}\""
         end
 
         def bundle_command(bundle_hash)
-          "bundle config set without 'development' && " \
-          "bundle config set path \"demo_app/.bauble/assets/#{bundle_hash}/gem-layer\" && " \
+          'bundle config set without test development && ' \
+          "bundle config set path \".bauble/assets/#{bundle_hash}/gem-layer\" && " \
           'bundle install && ' \
           'rm -rf .bundle'
         end

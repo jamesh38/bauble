@@ -66,7 +66,13 @@ module Bauble
               'code' => {
                 'fn::fileArchive' => "#{@app.config.asset_dir}/#{@app.bundle_hash}/#{@name}.zip"
               },
-              'role' => "${#{@role.role_name}.arn}"
+              'role' => "${#{@role.role_name}.arn}",
+              'layers' => ['${gemLayer.arn}'],
+              'environment' => {
+                'variables' => {
+                  'GEM_PATH' => '/opt/ruby/3.2.0'
+                }
+              }
             }
           }
         }
