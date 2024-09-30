@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require 'zip'
-require_relative 'base_resource'
+require_relative 'resource'
 
 # Ruby function
 module Bauble
   module Resources
     # a ruby lambda function
-    class RubyFunction < BaseResource
+    class RubyFunction < Resource
       attr_accessor :handler, :name, :role, :code_dir, :function_url, :env_vars
 
       def initialize(app, **kwargs)

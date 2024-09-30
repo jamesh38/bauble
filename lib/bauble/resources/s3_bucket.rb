@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative 'base_resource'
+require_relative 'resource'
 
 # bauble bucket to upload assets
 module Bauble
   module Resources
     # S3 bucket
-    class S3Bucket < BaseResource
+    class S3Bucket < Resource
       attr_accessor :bucket_name, :versioning
 
       def initialize(app, bucket_name: 'bauble-bucket')

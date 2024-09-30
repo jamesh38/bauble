@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 require 'zip'
-require_relative 'base_resource'
+require_relative 'resource'
 require_relative '../cli/code_bundler'
 
 # Ruby function
 module Bauble
   module Resources
     # a ruby lambda function
-    class GemLayer < BaseResource
+    class GemLayer < Resource
       def bundle
         Bauble::Cli::CodeBundler.docker_bundle_gems(bundle_hash: @app.bundle_hash)
       end
