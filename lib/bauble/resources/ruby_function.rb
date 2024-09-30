@@ -23,14 +23,10 @@ module Bauble
       def bundle
         # generate the asset directory path
         assets_dir = File.join(@app.config.asset_dir, @app.bundle_hash)
-
-        # create the asset directory if it doesn't exist
         FileUtils.mkdir_p(assets_dir)
 
         # create the zipfile path
         zipfile_name = File.join(assets_dir, "#{name}.zip")
-
-        # remove the zipfile if it already exists
         FileUtils.rm_f(zipfile_name)
 
         # create the zipfile
@@ -41,11 +37,10 @@ module Bauble
             zipfile.add(zipfile_path, file)
           end
 
-          # add the Gemfile and Gemfile.lock to the zipfile
-          gemfile_path = File.join(Dir.pwd, 'Gemfile')
-          gemfile_lock_path = File.join(Dir.pwd, 'Gemfile.lock')
-          zipfile.add('Gemfile', gemfile_path) if File.exist?(gemfile_path)
-          zipfile.add('Gemfile.lock', gemfile_lock_path) if File.exist?(gemfile_lock_path)
+          %w[Gemfile Gemfile.lock].each do |gemfile|
+            gemfile_path = File.join(@app.config.root_dir, gemfile)
+            zipfile.add(gemfile, gemfile_path) if File.exist?(gemfile_path)
+          end
         end
       end
 
