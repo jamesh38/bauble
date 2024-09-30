@@ -20,7 +20,8 @@ module Bauble
 
         # TODO: Remove the need for this to install things from the sub dir
         def docker_command(bundle_hash)
-          'docker run --rm ' \
+          'docker run ' \
+          '--rm ' \
           '-v $(pwd)/../:/var/task ' \
           '-w /var/task/demo_app ' \
           '--entrypoint /bin/sh ' \
