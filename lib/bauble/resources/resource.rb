@@ -4,7 +4,7 @@ module Bauble
   module Resources
     # Base resource
     # TODO: this should just be Resource not base resource
-    class BaseResource
+    class Resource
       attr_accessor :app
 
       def initialize(app)
