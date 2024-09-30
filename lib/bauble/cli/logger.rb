@@ -11,6 +11,12 @@ module Bauble
           print "[ Bauble ] #{message}".green
         end
 
+        def block_log(message)
+          Logger.nl
+          Logger.log message
+          Logger.nl
+        end
+
         def pulumi(message)
           print "[ Pulumi ] #{message}".blue
         end
@@ -19,8 +25,8 @@ module Bauble
           print "[ Docker ] #{message}".magenta
         end
 
-        def nl
-          puts "\n"
+        def nl(times = 1)
+          times.times { puts }
         end
 
         def debug(message)

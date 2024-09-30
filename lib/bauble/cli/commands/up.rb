@@ -32,7 +32,8 @@ module Bauble
                 @app.change_current_stack(stack_name)
 
                 # bundle assets
-                Logger.log "Bundling assets...\n"
+                Logger.block_log 'Bundling assets...'
+                Logger.nl
                 @app.bundle
 
                 # write template file
@@ -45,7 +46,7 @@ module Bauble
                 pulumi.create_or_select_stack(stack_name)
 
                 # deploy the rest
-                Logger.log "Deploying application resources...\n"
+                Logger.block_log 'Deploying application resources...'
                 pulumi.up
 
                 # log completion
