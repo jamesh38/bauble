@@ -21,6 +21,8 @@ module Bauble
       end
 
       def bundle
+        return true unless @code_dir
+
         # generate the asset directory path
         assets_dir = File.join(@app.config.asset_dir, @app.bundle_hash)
         FileUtils.mkdir_p(assets_dir)
@@ -59,7 +61,7 @@ module Bauble
               'handler' => @handler,
               'runtime' => 'ruby3.2',
               'code' => {
-                'fn::fileArchive' => "#{@app.config.asset_dir}/#{@app.bundle_hash}/#{@name}.zip"
+                'fn::fileArchive' => code_archive
               },
               'role' => "${#{@role.role_name}.arn}",
               'layers' => ['${gemLayer.arn}'],
@@ -73,6 +75,12 @@ module Bauble
             }
           }
         }
+      end
+
+      def code_archive
+        return "#{@app.config.asset_dir}/#{@app.bundle_hash}/#{@name}.zip" if @code_dir
+
+        "#{@app.config.asset_dir}/#{@app.bundle_hash}/shared_app_code"
       end
 
       def function_url_template_addon
