@@ -8,7 +8,14 @@ app = Bauble::Application.new(name: 'myapp')
 
 role = Bauble::Resources::IamRole.new(
   app,
-  role_name: 'myrole'
+  role_name: 'myrole',
+  policies: [
+    {
+      effect: 'allow',
+      actions: ['dynamodb:GetItem'],
+      resources: ['*']
+    }
+  ]
 )
 
 Bauble::Resources::RubyFunction.new(
