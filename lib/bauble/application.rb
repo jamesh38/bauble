@@ -17,15 +17,16 @@ module Bauble
       :name,
       :config,
       :code_dir,
-      :bundle_hash
+      :bundle_hash,
+      :shared_code_dir
     )
 
-    def initialize(name:, stacks: [])
+    def initialize(name:, stacks: [], code_dir: nil)
       @resources = []
-      add_gem_layer
       @stacks = []
       @name = name
-      @code_dir = "#{Dir.pwd}/app"
+      @shared_code_dir = code_dir
+      add_gem_layer
       stacks = ['dev'] if stacks.empty?
       stacks.each do |stack|
         Stack.new(self, stack)
@@ -55,10 +56,19 @@ module Bauble
     def bundle
       # TODO: this potentially need to be a hash of more resources I'm not sure yet'
       @bundle_hash = generate_unique_string("#{Dir.pwd}/app")
+      create_shared_code
       @resources.each(&:bundle)
     end
 
     private
+
+    def create_shared_code
+      return unless @shared_code_dir
+
+      destination_dir = File.join(config.asset_dir, @bundle_hash, 'shared_app_code', File.basename(@shared_code_dir))
+      FileUtils.mkdir_p(destination_dir)
+      FileUtils.cp_r(Dir.glob(File.join(@shared_code_dir, '*')), destination_dir)
+    end
 
     def synthesize_template
       all_resources = @resources.map(&:synthesize).reduce({}, :merge)
