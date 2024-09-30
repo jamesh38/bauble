@@ -17,13 +17,7 @@ module Bauble
 
               def destroy
                 Logger.logo
-
-                unless yes?('Are you sure you want to destroy the application? [y/N]')
-                  Logger.log('Destroy aborted')
-                  exit(0)
-                end
-
-                Logger.log('Destroying application...')
+                Logger.nl
 
                 # check for any stacks
                 raise 'No stacks found' if @app.stacks.empty?
@@ -33,6 +27,13 @@ module Bauble
                   Log.error 'Must provide a stack when multiple are defined'
                   exit(1)
                 end
+
+                unless yes?('Are you sure you want to destroy the application? [y/N]')
+                  Logger.log('Destroy aborted')
+                  exit(0)
+                end
+
+                Logger.block_log('Destroying application...')
 
                 # set up stack
                 stack_name = options[:stack] || @app.stacks.first.name

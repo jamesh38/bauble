@@ -45,7 +45,7 @@ module Bauble
     end
 
     def add_gem_layer
-      @resources << Bauble::Resources::GemLayer.new(self)
+      Bauble::Resources::GemLayer.new(self)
     end
 
     def change_current_stack(stack_name)

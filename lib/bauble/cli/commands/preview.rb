@@ -32,7 +32,8 @@ module Bauble
                 @app.change_current_stack(stack_name)
 
                 # bundle assets
-                Logger.log "Bundling assets...\n"
+                Logger.block_log 'Bundling assets...'
+                Logger.nl
                 @app.bundle
 
                 # write template file
@@ -42,6 +43,7 @@ module Bauble
                 pulumi.init!
 
                 # create or select stack
+                Logger.block_log('Running Pulumi preview...')
                 pulumi.create_or_select_stack(stack_name)
 
                 # run preview
