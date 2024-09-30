@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'base_resource'
+require_relative 'resource'
 
 # Lambda role
 module Bauble
   module Resources
     # aws lambda role
     # TODO: this should probably be lambda role no IAM role. do we need an IAM Role resource?
-    class IamRole < BaseResource
+    class IamRole < Resource
       attr_accessor :role_name, :policies
 
       def initialize(app, role_name:, policies: [])
