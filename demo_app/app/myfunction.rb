@@ -4,5 +4,5 @@ require 'httparty'
 
 def handler(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
   puts event.to_json
-  HTTParty.get('https://jsonplaceholder.typicode.com/todos/1').body
+  HTTParty.get('https://jsonplaceholder.typicode.com/posts/1')
 end
