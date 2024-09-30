@@ -6,7 +6,10 @@ require 'pry-byebug'
 
 app = Bauble::Application.new(name: 'myapp')
 
-role = Bauble::Resources::IamRole.new(app, role_name: 'myrole')
+role = Bauble::Resources::IamRole.new(
+  app,
+  role_name: 'myrole'
+)
 
 Bauble::Resources::RubyFunction.new(
   app,

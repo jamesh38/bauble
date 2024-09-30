@@ -8,16 +8,16 @@ module Bauble
   module Resources
     # a ruby lambda function
     class RubyFunction < BaseResource
-      attr_accessor :handler, :name, :role, :code_dir, :function_url
+      attr_accessor :handler, :name, :role, :code_dir, :function_url, :env_vars
 
-      # TODO: eval how is nest to pass arguments into this function. maybe args**?
-      def initialize(app, name:, handler:, code_dir:, role: nil, function_url: false)
+      def initialize(app, **kwargs)
         super(app)
-        @name = name
-        @handler = handler
-        @code_dir = code_dir
-        @role = role
-        @function_url = function_url
+        @name = kwargs[:name]
+        @handler = kwargs[:handler]
+        @code_dir = kwargs[:code_dir]
+        @role = kwargs[:role]
+        @function_url = kwargs.fetch(:function_url, false)
+        @env_vars = kwargs.fetch(:env_vars, {})
       end
 
       def bundle
@@ -69,9 +69,11 @@ module Bauble
               'role' => "${#{@role.role_name}.arn}",
               'layers' => ['${gemLayer.arn}'],
               'environment' => {
-                'variables' => {
-                  'GEM_PATH' => '/opt/ruby/3.2.0'
-                }
+                'variables' => @env_vars.merge(
+                  {
+                    'GEM_PATH' => '/opt/ruby/3.2.0'
+                  }
+                )
               }
             }
           }
