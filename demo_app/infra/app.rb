@@ -21,20 +21,6 @@ role = Bauble::Resources::IamRole.new(
 Bauble::Resources::RubyFunction.new(
   app,
   name: 'myfunction',
-  handler: 'app/myfunction.handler',
-  role: role
-)
-
-Bauble::Resources::RubyFunction.new(
-  app,
-  name: 'myfunction2',
-  handler: 'app/myfunction.handler',
-  role: role
-)
-
-Bauble::Resources::RubyFunction.new(
-  app,
-  name: 'myfunction3',
-  handler: 'app/myfunction.handler',
+  handler: 'app/handlers/hello_world.handler',
   role: role
 )
