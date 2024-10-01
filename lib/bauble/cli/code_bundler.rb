@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'logger'
+require_relative 'docker_command_builder'
 
 module Bauble
   module Cli
@@ -8,7 +9,7 @@ module Bauble
     class CodeBundler
       class << self
         def docker_bundle_gems(bundle_hash:)
-          IO.popen("#{docker_command(bundle_hash)} 2>&1") do |io|
+          IO.popen("#{docker_build_gems_command(bundle_hash)} 2>&1") do |io|
             io.each do |line|
               Logger.docker(line)
             end
@@ -19,15 +20,17 @@ module Bauble
         private
 
         # TODO: Remove the need for this to install things from the sub dir
-        def docker_command(bundle_hash)
-          'docker run ' \
-          '--rm ' \
-          '-v $(pwd)/../:/var/task ' \
-          '-w /var/task/demo_app ' \
-          '--entrypoint /bin/sh ' \
-          '--platform linux/amd64 ' \
-          'public.ecr.aws/sam/build-ruby3.2 ' \
-          "-c \"#{bundle_command(bundle_hash)}\""
+        def docker_build_gems_command(bundle_hash)
+          DockerCommandBuilder
+            .new
+            .with_rm
+            .with_volume('$(pwd)/../:/var/task')
+            .with_workdir('/var/task/demo_app')
+            .with_entrypoint('/bin/sh')
+            .with_platform('linux/amd64')
+            .with_image('public.ecr.aws/sam/build-ruby3.2')
+            .with_command(bundle_command(bundle_hash))
+            .build
         end
 
         def bundle_command(bundle_hash)
