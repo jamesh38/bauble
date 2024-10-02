@@ -8,12 +8,12 @@ module Bauble
     # aws lambda role
     # TODO: this should probably be lambda role no IAM role. do we need an IAM Role resource?
     class IamRole < Resource
-      attr_accessor :role_name, :policies
+      attr_accessor :role_name, :policy_statements
 
-      def initialize(app, role_name:, policies: [])
+      def initialize(app, role_name:, policy_statements: [])
         super(app)
         @role_name = role_name
-        @policies = policies
+        @policy_statements = policy_statements
       end
 
       def synthesize
@@ -26,7 +26,7 @@ module Bauble
           }
         }
 
-        return role_hash.merge(role_policy) if @policies.any?
+        return role_hash.merge(role_policy) if policy_statements.any?
 
         role_hash
       end
@@ -53,11 +53,11 @@ module Bauble
       def synth_policies
         {
           Version: '2012-10-17',
-          Statement: @policies.map do |policy|
+          Statement: policy_statements.map do |statement|
             {
-              Effect: policy[:effect].downcase == 'allow' ? 'Allow' : 'Deny',
-              Action: policy[:actions],
-              Resource: policy[:resources]
+              Effect: statement[:effect].downcase == 'allow' ? 'Allow' : 'Deny',
+              Action: statement[:actions],
+              Resource: statement[:resources]
             }
           end
         }.to_json
