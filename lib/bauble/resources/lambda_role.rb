@@ -6,8 +6,7 @@ require_relative 'resource'
 module Bauble
   module Resources
     # aws lambda role
-    # TODO: this should probably be lambda role no IAM role. do we need an IAM Role resource?
-    class IamRole < Resource
+    class LambdaRole < Resource
       attr_accessor :role_name, :policy_statements
 
       def initialize(app, role_name:, policy_statements: [])
