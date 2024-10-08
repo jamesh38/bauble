@@ -21,7 +21,8 @@ module Bauble
           role_name => {
             'type' => 'aws:iam:Role',
             'properties' => {
-              'assumeRolePolicy' => assume_role_policy
+              'assumeRolePolicy' => assume_role_policy,
+              'managedPolicyArns' => ['arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole']
             }
           }
         }
