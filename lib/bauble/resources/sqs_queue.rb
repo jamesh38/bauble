@@ -37,7 +37,7 @@ module Bauble
       end
 
       # Function to add a Lambda function as a target to the SQS Queue
-      def add_lambda_target(function)
+      def add_target(function)
         @lambda_targets << {
           "#{@name}_to_#{function.name}" => {
             'type' => 'aws:lambda:EventSourceMapping',
@@ -48,6 +48,11 @@ module Bauble
             }
           }
         }
+        function.role.add_policy_statement(
+          effect: 'Allow',
+          actions: ['sqs:ReceiveMessage', 'sqs:DeleteMessage', 'sqs:GetQueueAttributes'],
+          resources: ["${#{name}.arn}"]
+        )
       end
     end
   end
