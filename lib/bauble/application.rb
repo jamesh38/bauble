@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'resources/s3_bucket'
-require_relative 'resources/iam_role'
+require_relative 'resources/lambda_role'
 require_relative 'stack'
 require_relative 'cli/logger'
 require 'yaml'

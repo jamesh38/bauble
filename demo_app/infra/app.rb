@@ -6,7 +6,7 @@ require 'pry-byebug'
 
 app = Bauble::Application.new(name: 'myapp', code_dir: 'app')
 
-role = Bauble::Resources::IamRole.new(
+role = Bauble::Resources::LambdaRole.new(
   app,
   role_name: 'myrole',
   policy_statements: [
