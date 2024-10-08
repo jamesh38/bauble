@@ -31,6 +31,10 @@ module Bauble
         role_hash
       end
 
+      def add_policy_statement(effect:, actions:, resources:)
+        policy_statements << { effect: effect, actions: actions, resources: resources }
+      end
+
       def bundle
         true
       end
