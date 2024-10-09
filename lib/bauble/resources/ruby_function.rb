@@ -52,6 +52,8 @@ module Bauble
         template
       end
 
+      private
+
       def base_template
         {
           @name => {
