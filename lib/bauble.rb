@@ -8,6 +8,7 @@ require_relative 'bauble/resources/ruby_function'
 require_relative 'bauble/resources/gem_layer'
 require_relative 'bauble/resources/event_bridge_rule'
 require_relative 'bauble/resources/sqs_queue'
+require_relative 'bauble/resources/api_gateway_v2'
 require_relative 'bauble/stack'
 
 module Bauble
