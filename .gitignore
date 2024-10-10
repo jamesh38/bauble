@@ -11,3 +11,5 @@
 .rspec_status
 
 demo_app/.bauble
+
+bauble_core*.gem
