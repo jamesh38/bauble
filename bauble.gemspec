@@ -8,8 +8,9 @@ Gem::Specification.new do |spec|
   spec.authors = ['James Hoegerl']
   spec.email = ['james-hoegerl@pluralsight.com']
 
-  spec.summary = 'A gem to help you deploy Ruby based AWS Lambda functions.'
-  spec.description = 'A gem to help you deploy Ruby based AWS Lambda functions.'
+  spec.summary = 'Deploy Ruby-based AWS Lambda functions easily.'
+  spec.description = 'Bauble is a gem designed to simplify the deployment of your Ruby-based AWS Lambda functions. It
+      provides a streamlined and efficient process, ensuring that your functions are deployed quickly and correctly.'
   spec.homepage = 'https://github.com/la-jamesh/bauble'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 3.0.0'
