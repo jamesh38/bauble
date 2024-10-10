@@ -30,4 +30,4 @@ jobs:
       #   env:
       #     RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
       #   run: |
-      #     gem push bauble-*.gem # Replace with your gem name
+      #     gem push bauble_core-*.gem # Replace with your gem name
