@@ -1,0 +1,32 @@
+name: Publish Ruby Gem
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2.5" # Adjust to your gem's Ruby version
+
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Build the gem
+        run: gem build bauble.gemspec # Replace with your gemspec filename
+
+
+      # - name: Push to RubyGems
+      #   env:
+      #     RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+      #   run: |
+      #     gem push bauble-*.gem # Replace with your gem name

@@ -3,7 +3,7 @@
 require_relative 'lib/bauble/version'
 
 Gem::Specification.new do |spec|
-  spec.name = 'bauble'
+  spec.name = 'bauble_core'
   spec.version = Bauble::VERSION
   spec.authors = ['James Hoegerl']
   spec.email = ['james-hoegerl@pluralsight.com']
