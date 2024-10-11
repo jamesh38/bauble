@@ -14,22 +14,12 @@ jobs:
       contents: write # IMPORTANT: this permission is required for `rake release` to push the release tag
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby
         with:
           ruby-version: "3.2.5"
 
-      - name: Install dependencies
-        run: bundle install --jobs 4 --retry 3
-
-      - name: Build the gem
-        run: gem build bauble.gemspec
-
       - name: Publish the gem
         uses: rubygems/release-gem@v1
-        env:
-          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
