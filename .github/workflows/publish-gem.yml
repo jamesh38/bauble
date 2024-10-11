@@ -9,6 +9,10 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
+      contents: write # IMPORTANT: this permission is required for `rake release` to push the release tag
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -17,16 +21,14 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.2.5" # Adjust to your gem's Ruby version
+          ruby-version: "3.2.5"
 
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
 
       - name: Build the gem
-        run: gem build bauble.gemspec # Replace with your gemspec filename
+        run: gem build bauble.gemspec
 
-      - name: Push to RubyGems
+      - uses: rubygems/release-gem
         env:
           GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
-        run: |
-          gem push bauble_core-*.gem # Replace with your gem name
