@@ -17,7 +17,7 @@ module Bauble
         {
           'gemLayer' => {
             'type' => 'aws:lambda:LayerVersion',
-            'name' => 'gem_layer',
+            'name' => resource_name('gem_layer'),
             'properties' => {
               'code' => {
                 'fn::fileArchive' => "#{@app.config.asset_dir}/#{@app.bundle_hash}/gem-layer"

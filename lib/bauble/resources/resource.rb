@@ -19,6 +19,10 @@ module Bauble
       def bundle
         raise 'Not implemented'
       end
+
+      def resource_name(base_name)
+        "#{app.name}-#{base_name}-#{app.current_stack.name}"
+      end
     end
   end
 end

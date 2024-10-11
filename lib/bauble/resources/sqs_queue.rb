@@ -21,7 +21,7 @@ module Bauble
           @name => {
             'type' => 'aws:sqs:Queue',
             'properties' => {
-              'name' => @name,
+              'name' => resource_name(@name),
               'visibilityTimeoutSeconds' => @visibility_timeout
             }
           }
