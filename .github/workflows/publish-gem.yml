@@ -14,10 +14,10 @@ jobs:
       contents: write # IMPORTANT: this permission is required for `rake release` to push the release tag
 
     steps:
-      - uses: actions/checkout
+      - uses: actions/checkout@v2
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2.5"
 
