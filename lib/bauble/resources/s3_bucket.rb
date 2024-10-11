@@ -7,20 +7,20 @@ module Bauble
   module Resources
     # S3 bucket
     class S3Bucket < Resource
-      attr_accessor :bucket_name, :force_destroy
+      attr_accessor :name, :force_destroy
 
-      def initialize(app, bucket_name: 'bauble-bucket', force_destroy: false)
+      def initialize(app, name: 'bauble-bucket', force_destroy: false)
         super(app)
-        @bucket_name = bucket_name
+        @name = name
         @force_destroy = force_destroy
       end
 
       def synthesize
         {
-          @bucket_name => {
+          @name => {
             'type' => 'aws:s3:Bucket',
             'properties' => {
-              'bucket' => resource_name(@bucket_name),
+              'bucket' => resource_name(@name),
               'forceDestroy' => @force_destroy
             }
           }
