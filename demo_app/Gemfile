@@ -6,7 +6,12 @@ gem 'aws-record', '~> 2.13'
 gem 'httparty'
 
 group :development do
-  gem 'bauble', path: '..'
+  if ENV['BAUBLE_DEV_GEM_PATH']
+    gem 'bauble_core', path: ENV['BAUBLE_DEV_GEM_PATH']
+  else
+    gem 'bauble_core', path: '/var/task/bauble_core'
+  end
+
   gem 'pry', '~> 0.14.2'
   gem 'pry-byebug', '~> 3.10'
 end
