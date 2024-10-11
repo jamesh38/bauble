@@ -8,35 +8,37 @@ RubyFunction = Bauble::Resources::RubyFunction
 LambdaRole = Bauble::Resources::LambdaRole
 ApiGatewayV2 = Bauble::Resources::ApiGatewayV2
 
-app = Bauble::Application.new(name: 'myapp', code_dir: 'app')
+app = Bauble::Application.new(name: 'myapp', code_dir: 'app', skip_gem_layer: true)
 
-role = LambdaRole.new(
-  app,
-  role_name: 'myrole',
-  policy_statements: [
-    {
-      effect: 'allow',
-      actions: ['dynamodb:GetItem'],
-      resources: ['*']
-    }
-  ]
-)
+Bauble::Resources::S3Bucket.new(app, bucket_name: 'mybucket', force_destroy: true)
 
-fun = RubyFunction.new(
-  app,
-  name: 'myfunction',
-  handler: 'app/handlers/hello_world.handler',
-  role: role
-)
+# role = LambdaRole.new(
+#   app,
+#   role_name: 'myrole',
+#   policy_statements: [
+#     {
+#       effect: 'allow',
+#       actions: ['dynamodb:GetItem'],
+#       resources: ['*']
+#     }
+#   ]
+# )
 
-fun2 = RubyFunction.new(
-  app,
-  name: 'function-two',
-  handler: 'app/handlers/my_handler.handler',
-  role: role
-)
+# fun = RubyFunction.new(
+#   app,
+#   name: 'myfunction',
+#   handler: 'app/handlers/hello_world.handler',
+#   role: role
+# )
 
-api = ApiGatewayV2.new(app, name: 'myapi')
+# fun2 = RubyFunction.new(
+#   app,
+#   name: 'function-two',
+#   handler: 'app/handlers/my_handler.handler',
+#   role: role
+# )
 
-api.add_route(route_key: 'GET /hello', function: fun)
-api.add_route(route_key: 'GET /world', function: fun2)
+# api = ApiGatewayV2.new(app, name: 'myapi')
+
+# api.add_route(route_key: 'GET /hello', function: fun)
+# api.add_route(route_key: 'GET /world', function: fun2)
