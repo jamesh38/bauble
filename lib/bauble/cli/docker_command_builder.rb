@@ -43,6 +43,11 @@ module Bauble
         self
       end
 
+      def with_env(key, value)
+        @command += "-e #{key}=#{value} "
+        self
+      end
+
       def build
         @command
       end
