@@ -11,7 +11,8 @@ module Bauble
         :app_stack_name,
         :debug,
         :asset_dir,
-        :root_dir
+        :root_dir,
+        :skip_gem_layer
       )
 
       def initialize
@@ -21,6 +22,7 @@ module Bauble
         @pulumi_home = "#{@bauble_home}/.pulumi"
         @app_stack_name = 'bauble'
         @debug = ENV['BAUBLE_DEBUG'] || false
+        @skip_gem_layer = false
         set_pulumi_env_vars
       end
 

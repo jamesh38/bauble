@@ -1,5 +1,5 @@
 PATH
-  remote: bauble_core
+  remote: /Users/james-hoegerl/code/bauble
   specs:
     bauble_core (0.1.0)
       colorize (~> 1.1.0)

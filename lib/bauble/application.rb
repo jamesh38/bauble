@@ -18,15 +18,17 @@ module Bauble
       :config,
       :code_dir,
       :bundle_hash,
-      :shared_code_dir
+      :shared_code_dir,
+      :skip_gem_layer
     )
 
-    def initialize(name:, stacks: [], code_dir: nil)
+    def initialize(name:, stacks: [], code_dir: nil, skip_gem_layer: false)
       @resources = []
       @stacks = []
       @name = name
       @shared_code_dir = code_dir
-      add_gem_layer
+      @skip_gem_layer = skip_gem_layer
+      add_gem_layer unless skip_gem_layer
       stacks = ['dev'] if stacks.empty?
       stacks.each do |stack|
         Stack.new(self, stack)

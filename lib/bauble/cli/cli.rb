@@ -41,6 +41,7 @@ module Bauble
       def build_config
         @config = Config.configure do |c|
           c.app_name = @app.name
+          c.skip_gem_layer = @app.skip_gem_layer
         end
         @app.config = @config
       end
