@@ -1,10 +1,10 @@
 PATH
-  remote: ..
+  remote: bauble_core
   specs:
-    bauble (0.1.0)
-      colorize
-      rubyzip
-      thor
+    bauble_core (0.1.0)
+      colorize (~> 1.1.0)
+      rubyzip (~> 2.3.2)
+      thor (~> 1.3.2)
 
 GEM
   remote: https://rubygems.org/
@@ -52,7 +52,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-record (~> 2.13)
-  bauble!
+  bauble_core!
   httparty
   pry (~> 0.14.2)
   pry-byebug (~> 3.10)
