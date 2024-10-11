@@ -20,7 +20,7 @@ module Bauble
           @bucket_name => {
             'type' => 'aws:s3:Bucket',
             'properties' => {
-              'bucket' => @bucket_name,
+              'bucket' => resource_name(@bucket_name),
               'forceDestroy' => @force_destroy
             }
           }

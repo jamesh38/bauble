@@ -8,7 +8,7 @@ module Bauble
   module Resources
     # a ruby lambda function
     class RubyFunction < Resource
-      attr_accessor :handler, :name, :role, :code_dir, :function_url, :env_vars
+      attr_accessor :handler, :name, :role, :code_dir, :function_url, :env_vars, :layers
 
       def initialize(app, **kwargs)
         super(app)
@@ -16,6 +16,7 @@ module Bauble
         @handler = kwargs[:handler]
         @code_dir = kwargs[:code_dir]
         @role = kwargs[:role]
+        @layers = kwargs.fetch(:layers, [])
         @function_url = kwargs.fetch(:function_url, false)
         @env_vars = kwargs.fetch(:env_vars, {})
       end
@@ -58,15 +59,16 @@ module Bauble
         {
           @name => {
             'type' => 'aws:lambda:Function',
-            'name' => @name,
+            'name' => resource_name(@name),
             'properties' => {
+              'name' => resource_name(@name),
               'handler' => @handler,
               'runtime' => 'ruby3.2',
               'code' => {
                 'fn::fileArchive' => code_archive
               },
-              'role' => "${#{@role.role_name}.arn}",
-              'layers' => ['${gemLayer.arn}'],
+              'role' => "${#{@role.name}.arn}",
+              'layers' => gem_layers,
               'environment' => {
                 'variables' => @env_vars.merge(
                   {
@@ -83,6 +85,12 @@ module Bauble
         return "#{@app.config.asset_dir}/#{@app.bundle_hash}/#{@name}.zip" if @code_dir
 
         "#{@app.config.asset_dir}/#{@app.bundle_hash}/shared_app_code"
+      end
+
+      def gem_layers
+        all_layers = layers.dup
+        all_layers << '${gemLayer.arn}' unless @app.config.skip_gem_layer
+        all_layers
       end
 
       def function_url_template_addon
