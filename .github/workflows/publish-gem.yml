@@ -29,6 +29,7 @@ jobs:
       - name: Build the gem
         run: gem build bauble.gemspec
 
-      - uses: rubygems/release-gem
+      - name: Publish the gem
+        uses: rubygems/release-gem@v1
         env:
           GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
