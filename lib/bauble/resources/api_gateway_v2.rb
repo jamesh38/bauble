@@ -45,11 +45,11 @@ module Bauble
               'target' => "integrations/${#{route_name}-integration.id}"
             }
           }
-          route_hash.merge!(synthesize_integration(route, route_name))
+          route_hash.merge!(integration_hash(route, route_name))
         end
       end
 
-      def synthesize_integration(route, route_name)
+      def integration_hash(route, route_name)
         {
           "#{route_name}-integration" => {
             'type' => 'aws:apigatewayv2:Integration',
@@ -102,7 +102,7 @@ module Bauble
           name => {
             'type' => 'aws:apigatewayv2:Api',
             'properties' => {
-              'name' => name,
+              'name' => resource_name(name),
               'protocolType' => 'HTTP'
             }
           },

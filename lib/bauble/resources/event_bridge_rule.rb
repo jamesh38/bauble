@@ -6,9 +6,9 @@ module Bauble
   module Resources
     # EventBridgeRule class
     class EventBridgeRule < Resource
-      def initialize(app, rule_name:, **kwargs)
+      def initialize(app, name:, **kwargs)
         super(app)
-        @rule_name = rule_name
+        @name = name
         @description = kwargs.fetch(:description, 'Bauble EventBridge Rule')
         @event_pattern = kwargs.fetch(:event_pattern, nil)
         @schedule_expression = kwargs.fetch(:schedule_expression, nil)
@@ -21,10 +21,10 @@ module Bauble
 
       def synthesize
         event_rule_hash = {
-          @rule_name => {
+          @name => {
             'type' => 'aws:cloudwatch:EventRule',
             'properties' => {
-              'name' => @rule_name,
+              'name' => resource_name(@name),
               'description' => @description,
               'eventBusName' => @event_bus_name,
               'state' => @state
@@ -32,8 +32,8 @@ module Bauble
           }
         }
 
-        event_rule_hash[@rule_name]['properties']['eventPattern'] = @event_pattern.to_json if @event_pattern
-        event_rule_hash[@rule_name]['properties']['scheduleExpression'] = @schedule_expression if @schedule_expression
+        event_rule_hash[@name]['properties']['eventPattern'] = @event_pattern.to_json if @event_pattern
+        event_rule_hash[@name]['properties']['scheduleExpression'] = @schedule_expression if @schedule_expression
 
         @targets.each do |target|
           event_rule_hash.merge!(target)
@@ -48,10 +48,10 @@ module Bauble
 
       def add_target(function)
         @targets << {
-          "#{@rule_name}-#{function.name}-target" => {
+          "#{@name}-#{function.name}-target" => {
             'type' => 'aws:cloudwatch:EventTarget',
             'properties' => {
-              'rule' => "${#{@rule_name}.name}",
+              'rule' => "${#{@name}.name}",
               'arn' => "${#{function.name}.arn}"
             }
           },
@@ -61,7 +61,7 @@ module Bauble
               'action' => 'lambda:InvokeFunction',
               'function' => "${#{function.name}.name}",
               'principal' => 'events.amazonaws.com',
-              'sourceArn' => "${#{@rule_name}.arn}"
+              'sourceArn' => "${#{@name}.arn}"
             }
           }
         }
@@ -88,9 +88,9 @@ module Bauble
       end
 
       def name_present?
-        return if @rule_name
+        return if @name
 
-        raise 'EventBridgeRule must have a rule_name'
+        raise 'EventBridgeRule must have a name'
       end
     end
   end
