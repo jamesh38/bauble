@@ -25,9 +25,8 @@ jobs:
       - name: Build the gem
         run: gem build bauble.gemspec # Replace with your gemspec filename
 
-
-      # - name: Push to RubyGems
-      #   env:
-      #     RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
-      #   run: |
-      #     gem push bauble_core-*.gem # Replace with your gem name
+      - name: Push to RubyGems
+        env:
+          RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+        run: |
+          gem push bauble_core-*.gem # Replace with your gem name
