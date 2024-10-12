@@ -10,8 +10,8 @@ module Bauble
     # bundle code
     class CodeBundler
       class << self
-        def docker_bundle_gems(bundle_hash:)
-          IO.popen("#{docker_build_gems_command(bundle_hash)} 2>&1") do |io|
+        def docker_bundle_gems(gem_path:)
+          IO.popen("#{docker_build_gems_command(gem_path)} 2>&1") do |io|
             io.each do |line|
               Logger.docker(line)
             end
@@ -27,7 +27,7 @@ module Bauble
         private
 
         # TODO: Remove the need for this to install things from the sub dir
-        def docker_build_gems_command(bundle_hash)
+        def docker_build_gems_command(gem_path)
           command = DockerCommandBuilder
                     .new
                     .with_rm
@@ -41,15 +41,15 @@ module Bauble
           end
 
           command.with_image('public.ecr.aws/sam/build-ruby3.2')
-                 .with_command(bundle_command(bundle_hash))
+                 .with_command(bundle_command(gem_path))
                  .build
         end
 
-        def bundle_command(bundle_hash)
+        def bundle_command(gem_path)
           command = BundleCommandBuilder
                     .new
                     .with_bundle_without(%w[test development])
-                    .with_bundle_path(bundle_hash)
+                    .with_bundle_path(gem_path)
 
           command.with_bauble_gem_override if ENV['BAUBLE_DEV_GEM_PATH']
 

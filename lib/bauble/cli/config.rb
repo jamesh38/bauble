@@ -12,7 +12,9 @@ module Bauble
         :debug,
         :asset_dir,
         :root_dir,
-        :skip_gem_layer
+        :skip_gem_layer,
+        :gem_layer_asset_dir,
+        :shared_code_asset_dir
       )
 
       def initialize
@@ -20,6 +22,8 @@ module Bauble
         @bauble_home = "#{@root_dir}/.bauble"
         @asset_dir = "#{@bauble_home}/assets"
         @pulumi_home = "#{@bauble_home}/.pulumi"
+        @gem_layer_asset_dir = "#{@asset_dir}/gem_layer"
+        @shared_code_asset_dir = "#{@asset_dir}/shared_app_code"
         @app_stack_name = 'bauble'
         @debug = ENV['BAUBLE_DEBUG'] || false
         @skip_gem_layer = false
