@@ -13,8 +13,8 @@ module Bauble
         self
       end
 
-      def with_bundle_path(bundle_hash)
-        @commands << "bundle config set path \".bauble/assets/#{bundle_hash}/gem-layer\""
+      def with_bundle_path(path)
+        @commands << "bundle config set path #{path}"
         self
       end
 

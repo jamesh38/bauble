@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'zip'
 require_relative 'resource'
 require_relative '../cli/code_bundler'
 
@@ -10,7 +9,11 @@ module Bauble
     # a ruby lambda function
     class GemLayer < Resource
       def bundle
-        Bauble::Cli::CodeBundler.docker_bundle_gems(bundle_hash: @app.bundle_hash)
+        FileUtils.mkdir_p("#{@app.config.gem_layer_asset_dir}/#{@app.gem_layer_hash}")
+
+        Bauble::Cli::CodeBundler.docker_bundle_gems(
+          gem_path: ".bauble/assets/gem_layer/#{@app.gem_layer_hash}"
+        )
       end
 
       def synthesize
@@ -20,7 +23,7 @@ module Bauble
             'name' => resource_name('gem_layer'),
             'properties' => {
               'code' => {
-                'fn::fileArchive' => "#{@app.config.asset_dir}/#{@app.bundle_hash}/gem-layer"
+                'fn::fileArchive' => "#{@app.config.gem_layer_asset_dir}/#{@app.gem_layer_hash}"
               },
               'layerName' => "#{@app.config.app_name}-gem-layer",
               'compatibleRuntimes' => %w[ruby3.2]
