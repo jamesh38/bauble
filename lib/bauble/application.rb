@@ -19,6 +19,8 @@ module Bauble
       :code_dir,
       :bundle_hash,
       :shared_code_dir,
+      :shared_code_hash,
+      :gem_layer_hash,
       :skip_gem_layer
     )
 
@@ -47,27 +49,37 @@ module Bauble
       @template ||= synthesize_template
     end
 
-    def add_gem_layer
-      Bauble::Resources::GemLayer.new(self)
-    end
-
     def change_current_stack(stack_name)
       @current_stack = @stacks.find { |stack| stack.name == stack_name }
     end
 
     def bundle
-      # TODO: this potentially need to be a hash of more resources I'm not sure yet'
-      @bundle_hash = generate_unique_string("#{Dir.pwd}/app")
+      create_bundle_hashes
       create_shared_code
       @resources.each(&:bundle)
     end
 
     private
 
+    def create_bundle_hashes
+      @bundle_hash = hash_of_dir("#{Dir.pwd}/#{code_dir}")
+      @shared_code_hash = hash_of_dir("#{@config.root_dir}/#{@shared_code_dir}") if @shared_code_dir
+      @gem_layer_hash = hash_of_file("#{@config.root_dir}/Gemfile") unless @skip_gem_layer
+    end
+
+    def add_gem_layer
+      Bauble::Resources::GemLayer.new(self)
+    end
+
     def create_shared_code
       return unless @shared_code_dir
 
-      destination_dir = File.join(config.asset_dir, @bundle_hash, 'shared_app_code', File.basename(@shared_code_dir))
+      destination_dir = File.join(
+        config.asset_dir,
+        'shared_app_code',
+        @shared_code_hash,
+        @shared_code_dir
+      )
       FileUtils.mkdir_p(destination_dir)
       FileUtils.cp_r(Dir.glob(File.join(@shared_code_dir, '*')), destination_dir)
     end
@@ -87,10 +99,14 @@ module Bauble
       }
     end
 
-    def generate_unique_string(directory)
+    def hash_of_dir(directory)
       files = Dir.glob("#{directory}/**/*").select { |file| File.file?(file) }
       content_hash = files.map { |file| Digest::SHA256.file(file).hexdigest }.join
       Digest::SHA256.hexdigest(content_hash)
+    end
+
+    def hash_of_file(filename)
+      Digest::SHA256.file(filename).hexdigest
     end
   end
 end
