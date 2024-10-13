@@ -25,7 +25,7 @@ module Bauble
               'code' => {
                 'fn::fileArchive' => "#{@app.config.gem_layer_asset_dir}/#{@app.gem_layer_hash}"
               },
-              'layerName' => "#{@app.config.app_name}-gem-layer",
+              'layerName' => resource_name('gem_layer'),
               'compatibleRuntimes' => %w[ruby3.2]
             }
           }
