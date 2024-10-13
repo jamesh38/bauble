@@ -21,7 +21,9 @@ my_func = RubyFunction.new(
   app,
   name: 'myfunction',
   handler: 'app/handlers/hello_world.handler',
-  role: role
+  role: role,
+  timeout: 60,
+  memory_size: 256
 )
 
 # Create an event bridge rule

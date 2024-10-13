@@ -7,7 +7,8 @@ module Bauble
   module Resources
     # a ruby lambda function
     class RubyFunction < Resource
-      attr_accessor :handler, :name, :role, :function_url, :env_vars, :layers
+      attr_accessor :handler, :name, :role, :function_url, :env_vars, :layers, :timeout, :memory_size,
+                    :reserved_concurrent_executions, :vpc_config
 
       def initialize(app, **kwargs)
         super(app)
@@ -17,6 +18,10 @@ module Bauble
         @layers = kwargs.fetch(:layers, [])
         @function_url = kwargs.fetch(:function_url, false)
         @env_vars = kwargs.fetch(:env_vars, {})
+        @timeout = kwargs.fetch(:timeout, 30) # default to 30 seconds
+        @memory_size = kwargs.fetch(:memory_size, 128) # default to 128 MB
+        @reserved_concurrent_executions = kwargs.fetch(:reserved_concurrent_executions, nil) # no limit by default
+        @vpc_config = kwargs.fetch(:vpc_config, nil) # VPC config is optional
       end
 
       def bundle
@@ -51,8 +56,19 @@ module Bauble
                     'GEM_PATH' => '/opt/ruby/3.2.0'
                   }
                 )
-              }
-            }
+              },
+              'timeout' => @timeout,
+              'memorySize' => @memory_size,
+              'reservedConcurrentExecutions' => @reserved_concurrent_executions,
+              'vpcConfig' => if @vpc_config
+                               {
+                                 'subnetIds' => @vpc_config[:subnet_ids],
+                                 'securityGroupIds' => @vpc_config[:security_group_ids]
+                               }
+                             else
+                               nil
+                             end
+            }.compact
           }
         }
       end
