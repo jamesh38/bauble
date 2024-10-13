@@ -7,6 +7,7 @@ require 'pry-byebug'
 RubyFunction = Bauble::Resources::RubyFunction
 LambdaRole = Bauble::Resources::LambdaRole
 ApiGatewayV2 = Bauble::Resources::ApiGatewayV2
+S3Bucket = Bauble::Resources::S3Bucket
 
 app = Bauble::Application.new(name: 'myapp', code_dir: 'app', skip_gem_layer: true)
 
@@ -45,4 +46,4 @@ my_api.add_route(route_key: 'GET /hello', function: my_func)
 my_queue = Bauble::Resources::SQSQueue.new(app, name: 'my-queue')
 my_queue.add_target(my_func)
 
-Bauble::Resources::S3Bucket.new(app, name: 'my-bucket')
+S3Bucket.new(app, name: 'my-bucket')

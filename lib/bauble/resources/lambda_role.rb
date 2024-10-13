@@ -7,12 +7,14 @@ module Bauble
   module Resources
     # aws lambda role
     class LambdaRole < Resource
-      attr_accessor :name, :policy_statements
+      attr_accessor :name, :policy_statements, :managed_policy_arns, :description
 
-      def initialize(app, name:, policy_statements: [])
+      def initialize(app, name:, policy_statements: [], **kwargs)
         super(app)
         @name = name
         @policy_statements = policy_statements
+        @managed_policy_arns = []
+        @description = kwargs.fetch(:description, 'Bauble lambda role')
       end
 
       def synthesize
@@ -22,8 +24,11 @@ module Bauble
             'properties' => {
               'name' => resource_name(name),
               'assumeRolePolicy' => assume_role_policy,
-              'managedPolicyArns' => ['arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole']
-            }
+              'managedPolicyArns' => managed_policy_arns.push(
+                'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+              ),
+              'description' => @description
+            }.compact
           }
         }
 
