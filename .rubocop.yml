@@ -15,3 +15,11 @@ Metrics/AbcSize:
 # Increase the maximum allowed method length
 Metrics/MethodLength:
   Max: 400
+
+# Increase the maximum allowed class length to 200
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'

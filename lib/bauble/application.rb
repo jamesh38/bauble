@@ -24,17 +24,45 @@ module Bauble
       :skip_gem_layer
     )
 
-    def initialize(name:, stacks: [], code_dir: nil, skip_gem_layer: false)
-      @resources = []
-      @stacks = []
+    def initialize(name:, code_dir:, stacks: [], skip_gem_layer: false)
+      # passed arguments
       @name = name
       @shared_code_dir = code_dir
+      @stacks = []
       @skip_gem_layer = skip_gem_layer
+
+      # init others
+      @resources = []
+
+      # add gem layer by defalt
       add_gem_layer unless skip_gem_layer
+
+      # create a default stack if none passed
       stacks = ['dev'] if stacks.empty?
       stacks.each do |stack|
         Stack.new(self, stack)
       end
+      @current_stack = @stacks[0]
+    end
+
+    def template
+      @template ||= synthesize_template
+    end
+
+    def change_current_stack(stack_name)
+      stack = @stacks.find { |st| st.name == stack_name }
+      unless stack
+        Bauble::Cli::Logger.error "Unknown stack #{stack_name}"
+        exit(1)
+      end
+
+      @current_stack = stack
+    end
+
+    def bundle
+      create_bundle_hashes
+      create_shared_code
+      @resources.each(&:bundle)
     end
 
     def add_resource(resource)
@@ -43,20 +71,6 @@ module Bauble
 
     def add_stack(stack)
       @stacks << stack
-    end
-
-    def template
-      @template ||= synthesize_template
-    end
-
-    def change_current_stack(stack_name)
-      @current_stack = @stacks.find { |stack| stack.name == stack_name }
-    end
-
-    def bundle
-      create_bundle_hashes
-      create_shared_code
-      @resources.each(&:bundle)
     end
 
     private
