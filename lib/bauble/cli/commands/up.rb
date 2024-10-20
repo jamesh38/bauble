@@ -23,7 +23,7 @@ module Bauble
 
                 # check for multiple stacks
                 if @app.stacks.length > 1 && options[:stack].nil?
-                  Log.error 'Must provide a stack when multiple are defined'
+                  Logger.error 'Must provide a stack when multiple are defined'
                   exit(1)
                 end
 
