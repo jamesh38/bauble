@@ -3,7 +3,6 @@
 module Bauble
   module Resources
     # Base resource
-    # TODO: this should just be Resource not base resource
     class Resource
       attr_accessor :app
 
