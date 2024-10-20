@@ -30,7 +30,7 @@ module Bauble
         end
 
         def debug(message)
-          puts "[ Bauble DEBUG ] #{message}".orange if ENV['BAUBLE_DEBUG']
+          puts "[ Bauble DEBUG ] #{message}".yellow if ENV['BAUBLE_DEBUG']
         end
 
         def error(message)
