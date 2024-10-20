@@ -102,8 +102,9 @@ module Bauble
 
       def pulumi_logged_in?
         run_command('whoami')
-        Logger.debug "Checking pulumi login status... #{$CHILD_STATUS.success?}"
-        $CHILD_STATUS.success?
+        success = pulumi_command_success?
+        Logger.debug "Checking pulumi login status... #{success}"
+        success
       end
 
       def init_stack(stack_name)
@@ -117,6 +118,10 @@ module Bauble
       def stack_initialized?(stack_name)
         Logger.debug "Checking if stack #{stack_name} is initialized..."
         run_command('stack ls').include?(stack_name)
+      end
+
+      def pulumi_command_success?
+        $CHILD_STATUS.success?
       end
     end
   end
