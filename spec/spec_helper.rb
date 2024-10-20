@@ -4,6 +4,7 @@ require 'simplecov'
 
 SimpleCov.start do
   add_filter '/spec/'
+  add_filter 'lib/bauble/resources/postgres_layer.rb'
   track_files '{lib}/**/*.rb'
 end
 
