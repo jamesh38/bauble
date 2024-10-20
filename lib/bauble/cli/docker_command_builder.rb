@@ -39,7 +39,7 @@ module Bauble
       end
 
       def with_command(cmd)
-        @command += "-c \"#{cmd}\""
+        @command += %(-c "#{cmd.gsub('"', '\"')}" )
         self
       end
 
@@ -49,7 +49,7 @@ module Bauble
       end
 
       def build
-        @command
+        @command.strip
       end
     end
   end
