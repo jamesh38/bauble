@@ -17,7 +17,7 @@ module Bauble
             end
           end
 
-          return if $CHILD_STATUS.success?
+          return if last_process_success?
 
           `rm -rf .bundle`
           Logger.error('Bundle step failed')
@@ -25,6 +25,10 @@ module Bauble
         end
 
         private
+
+        def last_process_success?
+          $CHILD_STATUS.success?
+        end
 
         # TODO: Remove the need for this to install things from the sub dir
         def docker_build_gems_command(gem_path)
