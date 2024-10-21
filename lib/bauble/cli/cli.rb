@@ -61,8 +61,7 @@ module Bauble
       end
 
       def require_entrypoint
-        # TODO: We should probably use a config value here instead of Dir.pwd
-        require "#{Dir.pwd}/#{bauble_json['entrypoint']}"
+        Kernel.require "#{Dir.pwd}/#{bauble_json['entrypoint']}"
       end
     end
   end
