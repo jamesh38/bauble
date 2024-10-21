@@ -26,9 +26,7 @@ describe Bauble::Cli::BaubleCli do
     allow(FileUtils).to receive(:mkdir_p)
     allow(File).to receive(:open)
     allow(app).to receive(:config=)
-
-    # Mock the require call in the require_entrypoint method to prevent loading an actual file
-    allow_any_instance_of(described_class).to receive(:require).with("#{Dir.pwd}/entrypoint_file.rb")
+    allow(Kernel).to receive(:require).with("#{Dir.pwd}/entrypoint_file.rb")
   end
 
   describe '#initialize' do
@@ -127,9 +125,9 @@ describe Bauble::Cli::BaubleCli do
 
   describe '#require_entrypoint' do
     it 'requires the entrypoint defined in bauble.json' do
-      cli = described_class.new
+      described_class.new
 
-      expect(cli).to have_received(:require).with("#{Dir.pwd}/entrypoint_file.rb")
+      expect(Kernel).to have_received(:require).with("#{Dir.pwd}/entrypoint_file.rb")
     end
   end
 end
