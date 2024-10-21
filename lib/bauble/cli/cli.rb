@@ -49,7 +49,7 @@ module Bauble
       def write_stack_template(stack)
         create_directory
         # TODO: this can probably be put into something smarter, maube a file writing class?
-        File.open("#{config.pulumi_home}/Pulumi.#{stack.name}.yaml", 'w') { |file| file.write(stack.template) }
+        File.write("#{config.pulumi_home}/Pulumi.#{stack.name}.yaml", stack.template)
       end
 
       def create_directory

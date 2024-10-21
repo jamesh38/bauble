@@ -16,7 +16,7 @@ module Bauble
 
       def create_pulumi_yml(template)
         Logger.debug 'Creating Pulumi.yaml...'
-        FileUtils.mkdir_p(@config.pulumi_home) unless Dir.exist?(@config.pulumi_home)
+        FileUtils.mkdir_p(@config.pulumi_home)
         File.write("#{@config.pulumi_home}/Pulumi.yaml", template, mode: 'w')
       end
 

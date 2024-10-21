@@ -93,7 +93,7 @@ describe Bauble::Cli::BaubleCli do
       cli = described_class.new
 
       expect(FileUtils).to receive(:mkdir_p).with('/mocked/pulumi_home')
-      expect(File).to receive(:open).with('/mocked/pulumi_home/Pulumi.test-stack.yaml', 'w')
+      expect(File).to receive(:write).with('/mocked/pulumi_home/Pulumi.test-stack.yaml', 'stack_template_content')
 
       cli.send(:write_stack_template, stack)
     end

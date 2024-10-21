@@ -65,8 +65,6 @@ module Bauble
                                  'subnetIds' => @vpc_config[:subnet_ids],
                                  'securityGroupIds' => @vpc_config[:security_group_ids]
                                }
-                             else
-                               nil
                              end
             }.compact
           }

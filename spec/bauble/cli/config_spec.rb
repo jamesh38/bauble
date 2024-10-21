@@ -43,9 +43,9 @@ describe Bauble::Cli::Config do
     end
 
     it 'sets Pulumi-related environment variables' do
-      expect(ENV['PULUMI_HOME']).to eq(config.pulumi_home)
-      expect(ENV['PULUMI_CONFIG_PASSPHRASE']).to eq('')
-      expect(ENV['PULUMI_SKIP_UPDATE_CHECK']).to eq('true')
+      expect(ENV.fetch('PULUMI_HOME', nil)).to eq(config.pulumi_home)
+      expect(ENV.fetch('PULUMI_CONFIG_PASSPHRASE', nil)).to eq('')
+      expect(ENV.fetch('PULUMI_SKIP_UPDATE_CHECK', nil)).to eq('true')
     end
   end
 

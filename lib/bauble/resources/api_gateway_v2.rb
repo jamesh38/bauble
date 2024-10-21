@@ -35,7 +35,7 @@ module Bauble
       private
 
       def routes_hash
-        routes.each_with_index.each_with_object({}) do |(route, index), route_hash|
+        routes.each_with_index.with_object({}) do |(route, index), route_hash|
           route_name = "#{name}-route-#{index}"
           route_hash[route_name] = {
             'type' => 'aws:apigatewayv2:Route',
