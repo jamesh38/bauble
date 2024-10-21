@@ -76,19 +76,19 @@ module Bauble
       end
 
       def pattern_or_schedule?
-        return if @event_pattern || @schedule_expression
+        return false if @event_pattern || @schedule_expression
 
         raise 'EventBridgeRule must have an event_pattern or a schedule_expression'
       end
 
       def pattern_and_schedule?
-        return unless @event_pattern && @schedule_expression
+        return false unless @event_pattern && @schedule_expression
 
         raise 'EventBridgeRule cannot have both an event_pattern and a schedule_expression'
       end
 
       def name_present?
-        return if @name
+        return false if @name
 
         raise 'EventBridgeRule must have a name'
       end

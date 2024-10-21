@@ -22,4 +22,8 @@ Metrics/ClassLength:
 
 Metrics/BlockLength:
   Exclude:
-    - 'spec/**/*'
+    - "spec/**/*"
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
