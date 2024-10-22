@@ -47,7 +47,7 @@ module Bauble
               'name' => resource_name(@name),
               'role' => "${#{@role.name}.arn}",
               'environment' => {
-                'variables' => @env_vars.merge(
+                'variables' => @env_vars.transform_keys(&:to_s).merge(
                   {
                     'GEM_PATH' => '/opt/ruby/3.2.0'
                   }

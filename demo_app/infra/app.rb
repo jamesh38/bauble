@@ -25,7 +25,10 @@ my_func = RubyFunction.new(
   role: role,
   image_uri: '723551696986.dkr.ecr.us-east-2.amazonaws.com/my-repo:adsf',
   timeout: 60,
-  memory_size: 256
+  memory_size: 256,
+  env_vars: {
+    HELLO: 'WORLD'
+  }
 )
 
 # Create an event bridge rule
