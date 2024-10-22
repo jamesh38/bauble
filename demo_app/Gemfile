@@ -5,12 +5,14 @@ source 'https://rubygems.org'
 gem 'httparty'
 
 group :development do
-  if ENV['BAUBLE_DEV_GEM_PATH']
-    gem 'bauble_core', path: ENV['BAUBLE_DEV_GEM_PATH']
-  else
-    gem 'bauble_core', path: '/var/task/bauble_core'
-  end
+  # if ENV['BAUBLE_DEV_GEM_PATH']
+  #   gem 'bauble_core', path: ENV['BAUBLE_DEV_GEM_PATH']
+  # else
+  #   gem 'bauble_core', path: '/var/task/bauble_core'
+  # end
 
+  gem 'bauble_core', path: '..'
+  gem 'byebug', '~> 11.1'
   gem 'pry', '~> 0.14.2'
   gem 'pry-byebug', '~> 3.10'
 end
