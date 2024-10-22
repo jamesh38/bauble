@@ -9,7 +9,7 @@ LambdaRole = Bauble::Resources::LambdaRole
 ApiGatewayV2 = Bauble::Resources::ApiGatewayV2
 S3Bucket = Bauble::Resources::S3Bucket
 
-app = Bauble::Application.new(name: 'myapp', code_dir: 'app', skip_gem_layer: false)
+app = Bauble::Application.new(name: 'myapp', code_dir: 'app', skip_gem_layer: true)
 
 # Create a role
 role = LambdaRole.new(
@@ -23,6 +23,7 @@ my_func = RubyFunction.new(
   name: 'myfunction',
   handler: 'app/handlers/hello_world.handler',
   role: role,
+  image_uri: '723551696986.dkr.ecr.us-east-2.amazonaws.com/my-repo:adsf',
   timeout: 60,
   memory_size: 256
 )

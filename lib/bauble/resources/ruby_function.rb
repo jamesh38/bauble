@@ -8,7 +8,7 @@ module Bauble
     # a ruby lambda function
     class RubyFunction < Resource
       attr_accessor :handler, :name, :role, :function_url, :env_vars, :layers, :timeout, :memory_size,
-                    :reserved_concurrent_executions, :vpc_config
+                    :reserved_concurrent_executions, :vpc_config, :image_uri
 
       def initialize(app, **kwargs)
         super(app)
@@ -16,6 +16,7 @@ module Bauble
         @handler = kwargs[:handler]
         @role = kwargs[:role]
         @layers = kwargs.fetch(:layers, [])
+        @image_uri = kwargs.fetch(:image_uri, nil)
         @function_url = kwargs.fetch(:function_url, false)
         @env_vars = kwargs.fetch(:env_vars, {})
         @timeout = kwargs.fetch(:timeout, 30) # default to 30 seconds
@@ -30,6 +31,7 @@ module Bauble
 
       def synthesize
         template = function_hash
+        template[@name]['properties'].merge!(code_hash)
         template.merge!(function_url_template_addon) if @function_url
         template
       end
@@ -43,13 +45,7 @@ module Bauble
             'name' => resource_name(@name),
             'properties' => {
               'name' => resource_name(@name),
-              'handler' => @handler,
-              'runtime' => 'ruby3.2',
-              'code' => {
-                'fn::fileArchive' => "#{@app.config.asset_dir}/shared_app_code/#{@app.shared_code_hash}"
-              },
               'role' => "${#{@role.name}.arn}",
-              'layers' => gem_layers,
               'environment' => {
                 'variables' => @env_vars.merge(
                   {
@@ -75,6 +71,24 @@ module Bauble
         all_layers = layers.dup
         all_layers << '${gemLayer.arn}' unless @app.config.skip_gem_layer
         all_layers
+      end
+
+      def code_hash
+        if @image_uri
+          return {
+            'packageType' => 'Image',
+            'imageUri' => @image_uri
+          }
+        end
+
+        {
+          'code' => {
+            'fn::fileArchive' => "#{@app.config.asset_dir}/shared_app_code/#{@app.shared_code_hash}"
+          },
+          'handler' => @handler,
+          'layers' => gem_layers,
+          'runtime' => 'ruby3.2'
+        }
       end
 
       def function_url_template_addon
