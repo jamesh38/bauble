@@ -13,3 +13,4 @@
 demo_app/.bauble
 
 bauble_core*.gem
+**/*/.bauble

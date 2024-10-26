@@ -30,7 +30,6 @@ module Bauble
           $CHILD_STATUS.success?
         end
 
-        # TODO: Remove the need for this to install things from the sub dir
         def docker_build_gems_command(gem_path)
           command = DockerCommandBuilder
                     .new
