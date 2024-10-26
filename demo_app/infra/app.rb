@@ -9,7 +9,11 @@ LambdaRole = Bauble::Resources::LambdaRole
 ApiGatewayV2 = Bauble::Resources::ApiGatewayV2
 S3Bucket = Bauble::Resources::S3Bucket
 
-app = Bauble::Application.new(name: 'myapp', code_dir: 'app', skip_gem_layer: true)
+app = Bauble::Application.new(
+  name: 'myapp',
+  code_dir: 'app',
+  skip_gem_layer: true
+)
 
 # Create a role
 role = LambdaRole.new(

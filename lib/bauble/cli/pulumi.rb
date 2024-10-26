@@ -97,7 +97,9 @@ module Bauble
 
       def login
         Logger.debug 'Logging into pulumi locally...'
-        run_command('login --local')
+        command = 'login'
+        command += ' --local' unless @config.s3_backend
+        run_command(command)
       end
 
       def pulumi_logged_in?

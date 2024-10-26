@@ -20,12 +20,14 @@ describe Bauble::Cli::BaubleCli do
     allow(Bauble::Cli::Config).to receive(:configure).and_yield(config).and_return(config)
     allow(config).to receive(:app_name=)
     allow(config).to receive(:skip_gem_layer=)
+    allow(config).to receive(:s3_backend=)
     allow(File).to receive(:read).with('bauble.json').and_return(bauble_json_content)
     allow(JSON).to receive(:parse).with(bauble_json_content).and_return(JSON.parse(bauble_json_content))
     allow(Bauble::Cli::Pulumi).to receive(:new).and_return(pulumi)
     allow(FileUtils).to receive(:mkdir_p)
     allow(File).to receive(:open)
     allow(app).to receive(:config=)
+    allow(app).to receive(:s3_backend)
     allow(Kernel).to receive(:require).with("#{Dir.pwd}/entrypoint_file.rb")
   end
 

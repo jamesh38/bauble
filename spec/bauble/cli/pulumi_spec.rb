@@ -21,6 +21,7 @@ describe Bauble::Cli::Pulumi do
     allow(IO).to receive(:popen).and_return(double(read: '', each: []))
     allow(pulumi).to receive(:run_command).and_return('')
     allow(pulumi).to receive(:pulumi_command_success?).and_return(true)
+    allow(config).to receive(:s3_backend)
   end
 
   describe '#create_pulumi_yml' do
@@ -183,6 +184,16 @@ describe Bauble::Cli::Pulumi do
       pulumi.send(:login)
 
       expect(pulumi).to have_received(:run_command).with('login --local')
+      expect(Bauble::Cli::Logger).to have_received(:debug).with('Logging into pulumi locally...')
+    end
+
+    it 'logs into pulumi with s3 backend' do
+      allow(pulumi).to receive(:run_command)
+      allow(config).to receive(:s3_backend).and_return('s3://my-bucket')
+
+      pulumi.send(:login)
+
+      expect(pulumi).to have_received(:run_command).with('login')
       expect(Bauble::Cli::Logger).to have_received(:debug).with('Logging into pulumi locally...')
     end
   end

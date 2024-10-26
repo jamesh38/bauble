@@ -14,7 +14,8 @@ module Bauble
         :root_dir,
         :skip_gem_layer,
         :gem_layer_asset_dir,
-        :shared_code_asset_dir
+        :shared_code_asset_dir,
+        :s3_backend
       )
 
       def initialize
@@ -27,6 +28,7 @@ module Bauble
         @app_stack_name = 'bauble'
         @debug = ENV['BAUBLE_DEBUG'] || false
         @skip_gem_layer = false
+        @s3_backend = nil
         set_pulumi_env_vars
       end
 

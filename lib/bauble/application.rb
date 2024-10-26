@@ -21,15 +21,17 @@ module Bauble
       :shared_code_dir,
       :shared_code_hash,
       :gem_layer_hash,
-      :skip_gem_layer
+      :skip_gem_layer,
+      :s3_backend
     )
 
-    def initialize(name:, code_dir:, stacks: [], skip_gem_layer: false)
+    def initialize(name:, code_dir:, stacks: [], skip_gem_layer: false, s3_backend: nil)
       # passed arguments
       @name = name
       @shared_code_dir = code_dir
       @stacks = []
       @skip_gem_layer = skip_gem_layer
+      @s3_backend = s3_backend
 
       # init others
       @resources = []
@@ -106,11 +108,13 @@ module Bauble
     end
 
     def base_template
-      {
+      base_hash = {
         'name' => @name,
-        'runtime' => 'yaml',
-        'resources' => {}
+        'runtime' => 'yaml'
       }
+      base_hash['backend'] = { 'url' => @s3_backend } if @s3_backend
+      base_hash['resources'] = {}
+      base_hash
     end
 
     def hash_of_dir(directory)
