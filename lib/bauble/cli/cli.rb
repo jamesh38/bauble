@@ -6,6 +6,7 @@ require 'json'
 require_relative 'commands/preview'
 require_relative 'commands/up'
 require_relative 'commands/destroy'
+require_relative 'commands/new'
 require_relative 'pulumi'
 require_relative '../application'
 
@@ -16,6 +17,7 @@ module Bauble
       include Commands::Preview
       include Commands::Up
       include Commands::Destroy
+      include Commands::New
 
       attr_accessor :app, :config
 
