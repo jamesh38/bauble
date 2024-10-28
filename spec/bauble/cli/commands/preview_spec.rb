@@ -36,6 +36,7 @@ describe Bauble::Cli::Commands::Preview do
   before do
     allow(thor_instance).to receive(:options).and_return(options)
     allow(thor_instance).to receive(:pulumi).and_return(pulumi)
+    allow(thor_instance).to receive(:setup_app)
     allow(Bauble::Cli::Logger).to receive(:logo)
     allow(Bauble::Cli::Logger).to receive(:block_log)
     allow(Bauble::Cli::Logger).to receive(:nl)

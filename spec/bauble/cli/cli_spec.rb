@@ -22,6 +22,7 @@ describe Bauble::Cli::BaubleCli do
     allow(config).to receive(:skip_gem_layer=)
     allow(config).to receive(:s3_backend=)
     allow(File).to receive(:read).with('bauble.json').and_return(bauble_json_content)
+    allow(File).to receive(:exist?).with('bauble.json').and_return(true)
     allow(JSON).to receive(:parse).with(bauble_json_content).and_return(JSON.parse(bauble_json_content))
     allow(Bauble::Cli::Pulumi).to receive(:new).and_return(pulumi)
     allow(FileUtils).to receive(:mkdir_p)
@@ -29,27 +30,6 @@ describe Bauble::Cli::BaubleCli do
     allow(app).to receive(:config=)
     allow(app).to receive(:s3_backend)
     allow(Kernel).to receive(:require).with("#{Dir.pwd}/entrypoint_file.rb")
-  end
-
-  describe '#initialize' do
-    context 'when the application instance is found' do
-      it 'initializes with an application instance and config' do
-        cli = described_class.new
-
-        expect(cli.app).to eq(app)
-        expect(cli.config).to eq(config)
-      end
-    end
-
-    context 'when no application instance is found' do
-      before do
-        allow(ObjectSpace).to receive(:each_object).with(Bauble::Application).and_return([].each)
-      end
-
-      it 'raises an error' do
-        expect { described_class.new }.to raise_error('No App instance found')
-      end
-    end
   end
 
   describe '.exit_on_failure?' do
@@ -78,6 +58,7 @@ describe Bauble::Cli::BaubleCli do
     it 'configures the application config' do
       cli = described_class.new
 
+      cli.send(:setup_app)
       cli.send(:build_config)
 
       # `configure` might be called twice, once during initialization and again explicitly.
@@ -96,6 +77,7 @@ describe Bauble::Cli::BaubleCli do
 
       expect(FileUtils).to receive(:mkdir_p).with('/mocked/pulumi_home')
       expect(File).to receive(:write).with('/mocked/pulumi_home/Pulumi.test-stack.yaml', 'stack_template_content')
+      cli.send(:setup_app)
 
       cli.send(:write_stack_template, stack)
     end
@@ -106,6 +88,8 @@ describe Bauble::Cli::BaubleCli do
       cli = described_class.new
 
       expect(FileUtils).to receive(:mkdir_p).with('/mocked/pulumi_home')
+      cli.send(:setup_app)
+
       cli.send(:create_directory)
     end
   end
@@ -115,6 +99,7 @@ describe Bauble::Cli::BaubleCli do
       cli = described_class.new
 
       # Call the method for the first time
+      cli.send(:setup_app)
       cli.send(:bauble_json)
 
       # Ensure `JSON.parse` is called once during the first call
@@ -127,7 +112,8 @@ describe Bauble::Cli::BaubleCli do
 
   describe '#require_entrypoint' do
     it 'requires the entrypoint defined in bauble.json' do
-      described_class.new
+      cli = described_class.new
+      cli.send(:setup_app)
 
       expect(Kernel).to have_received(:require).with("#{Dir.pwd}/entrypoint_file.rb")
     end

@@ -9,6 +9,7 @@ require_relative 'commands/destroy'
 require_relative 'commands/new'
 require_relative 'pulumi'
 require_relative '../application'
+require_relative 'logger'
 
 module Bauble
   module Cli
@@ -21,17 +22,22 @@ module Bauble
 
       attr_accessor :app, :config
 
-      def initialize(*args)
-        super
-        require_entrypoint
-        @app = ObjectSpace.each_object(Bauble::Application).first
-        raise 'No App instance found' unless @app
-
-        build_config
-      end
-
       def self.exit_on_failure?
         true
+      end
+
+      no_commands do
+        def setup_app
+          require_entrypoint
+          @app = ObjectSpace.each_object(Bauble::Application).first
+
+          unless @app
+            Logger.error 'No Bauble::Application object found'
+            exit 1
+          end
+
+          build_config
+        end
       end
 
       private
@@ -60,10 +66,18 @@ module Bauble
       end
 
       def bauble_json
+        unless File.exist?('bauble.json')
+          Logger.error 'No bauble.json file found'
+          exit 1
+        end
         @bauble_json ||= JSON.parse(File.read('bauble.json'))
       end
 
       def require_entrypoint
+        unless bauble_json['entrypoint']
+          Logger.error 'No entrypoint found in bauble.json'
+          exit 1
+        end
         Kernel.require "#{Dir.pwd}/#{bauble_json['entrypoint']}"
       end
     end

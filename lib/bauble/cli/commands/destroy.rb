@@ -19,6 +19,8 @@ module Bauble
                 Logger.logo
                 Logger.nl
 
+                setup_app
+
                 # check for any stacks
                 raise 'No stacks found' if @app.stacks.empty?
 

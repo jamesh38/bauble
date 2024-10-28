@@ -18,6 +18,8 @@ module Bauble
               def up
                 Logger.logo
 
+                setup_app
+
                 # check for any stacks
                 raise 'No stacks found' if @app.stacks.empty?
 
