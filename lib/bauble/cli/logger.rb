@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'colorize'
+require 'bauble/version'
 
 module Bauble
   module Cli
