@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'net/http'
-require 'pry'
 require 'thor'
 require_relative '../pulumi'
 require_relative '../logger'
