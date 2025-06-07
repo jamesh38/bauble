@@ -1,39 +1,224 @@
 # Bauble
 
-TODO: Delete this and the text below, and describe your gem
+[![Gem Version](https://badge.fury.io/rb/bauble_core.svg)](https://badge.fury.io/rb/bauble_core)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/bauble`. To experiment with that code, run `bin/console` for an interactive prompt.
+Bauble lets you build and deploy Ruby-based Lambda function applications using pure Ruby code. It uses Pulumi for the actual deployments and automatically bundles your Ruby gems into Lambda Layers.
+
+## Features
+
+- 💎 **Ruby as IaC**: Use pure Ruby code to define your AWS infrastructure instead of YAML, JSON, or other DSLs
+- 📦 **Dependency Management**: Automatic bundling of gems and shared code
+- 🛠️ **Reliable Deployments**: Uses Pulumi as the underlying deployment mechanism while you focus on writing Ruby
+- 🧩 **Modular Resources**: Create Lambda functions, API Gateways, EventBridge rules, SQS queues, and more
+- 🔄 **Multiple Environments**: Support for multiple deployment stacks (dev, staging, production)
+
+## Prerequisites
+
+- Ruby 3.0.0 or higher
+- [Pulumi CLI](https://www.pulumi.com/docs/get-started/install/) installed and configured
+- AWS credentials configured (via AWS CLI, environment variables, or Pulumi configuration)
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add this line to your application's Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
+```ruby
+gem 'bauble_core'
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+And then execute:
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+```
+$ bundle install
+```
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+Or install it yourself as:
 
-## Usage
+```
+$ gem install bauble_core
+```
 
-TODO: Write usage instructions here
+## Quick Start
+
+### Creating a New Project
+
+You can quickly scaffold a new Bauble project using the CLI:
+
+```
+$ bauble new my-lambda-project
+```
+
+This will create a basic project structure with example files to get you started.
+
+### Project Structure
+
+A typical Bauble project has the following structure:
+
+```
+my-lambda-project/
+├── app/                # Your Lambda function code
+│   └── hello_world.rb  # Example Lambda function
+├── infra/              # Infrastructure definition
+│   └── app.rb          # Main application definition
+├── bauble.json         # Bauble configuration
+└── Gemfile             # Ruby dependencies
+```
+
+### Define Your Infrastructure
+
+In the `infra/app.rb` file, define your AWS resources:
+
+```ruby
+require 'bauble'
+
+# Initialize your application
+app = Bauble::Application.new(
+  name: 'my-lambda-app',
+  code_dir: 'app'  # Directory containing your Lambda code
+)
+
+# Create an IAM role for your Lambda
+role = Bauble::Resources::LambdaRole.new(
+  app,
+  name: 'lambda-role'
+)
+
+# Define a Lambda function
+Bauble::Resources::RubyFunction.new(
+  app,
+  role: role,
+  name: 'hello-world',
+  handler: 'app/hello_world.handler'  # Path to your handler function
+)
+
+# Add API Gateway (optional)
+api = Bauble::Resources::ApiGatewayV2.new(
+  app,
+  name: 'api-gateway'
+)
+
+# Connect Lambda to API Gateway (optional)
+api.add_route(
+  method: 'GET',
+  path: '/hello',
+  function: lambda_function
+)
+```
+
+### Write Your Lambda Function
+
+In `app/hello_world.rb`:
+
+```ruby
+# frozen_string_literal: true
+
+def handler(event:, context:)
+  {
+    statusCode: 200,
+    body: JSON.generate({
+      message: "Hello from Bauble Lambda!"
+    })
+  }
+end
+```
+
+### Deploy Your Application
+
+Deploy your application with:
+
+```
+$ bauble up
+```
+
+If you have multiple stacks defined, specify the stack:
+
+```
+$ bauble up --stack dev
+```
+
+### Preview Changes
+
+To preview changes without deploying:
+
+```
+$ bauble preview
+```
+
+### Destroy Resources
+
+To destroy all deployed resources:
+
+```
+$ bauble destroy
+```
+
+## Advanced Usage
+
+### Multiple Stacks
+
+Bauble supports multiple deployment environments through stacks:
+
+```ruby
+app = Bauble::Application.new(
+  name: 'my-lambda-app',
+  code_dir: 'app',
+  stacks: ['dev', 'staging', 'prod']
+)
+```
+
+### EventBridge Rules
+
+Create EventBridge rules to trigger your Lambda functions on a schedule:
+
+```ruby
+Bauble::Resources::EventBridgeRule.new(
+  app,
+  name: 'scheduled-rule',
+  schedule_expression: 'rate(1 hour)',
+  target_function: your_lambda_function
+)
+```
+
+### SQS Queues
+
+Create SQS queues and connect them to Lambda functions:
+
+```ruby
+queue = Bauble::Resources::SqsQueue.new(
+  app,
+  name: 'process-queue'
+)
+
+# Connect queue to Lambda (Lambda will be triggered when messages are in queue)
+Bauble::Resources::RubyFunction.new(
+  app,
+  role: role,
+  name: 'process-message',
+  handler: 'app/process_message.handler',
+  event_source: queue
+)
+```
+
+## Configuration
+
+### bauble.json
+
+The `bauble.json` file in your project root configures your application:
+
+```json
+{
+  "entrypoint": "infra/app.rb"
+}
+```
 
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/bauble. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/bauble/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/la-jamesh/bauble.
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Bauble project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/bauble/blob/main/CODE_OF_CONDUCT.md).
